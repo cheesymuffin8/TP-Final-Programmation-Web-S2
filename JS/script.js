@@ -60,10 +60,10 @@ function drawFloor() {
     rect(0, floorHeight + hitboxSize / 2, width, 10);
 }
 
-//Joueur 1
+//Joueur 1 (Flèches directionnelles)
 function updatePlayer1() {
 
-    // Gauche / Droite
+    // Gauche / Droite (Kasey)
     if (keyIsDown(37)) {
         plrs[0].vitesseX -= plrs[0].speed;
     }
@@ -77,34 +77,35 @@ function updatePlayer1() {
     // Appliquer mouvement
     plrs[0].posX += plrs[0].vitesseX;
 
-    // Saut
+    // Saut (Maxime)
     if (keyIsDown(38) && !plrs[0].jumping) {
         plrs[0].vitesseY = plrs[0].jumpForce;
         plrs[0].jumping = true;
     }
 
-    // Gravité
+    // Gravité (Maxime)
     plrs[0].vitesseY += plrs[0].gravity;
     plrs[0].posY += plrs[0].vitesseY;
 
-    // Collision sol
+    // Collision sol (Maxime)
     if (plrs[0].posY >= floorHeight) {
         plrs[0].posY = floorHeight;
         plrs[0].vitesseY = 0;
         plrs[0].jumping = false;
     }
 
-    // Accroupissement
+    // Accroupissement (Maxime)
     if (keyIsDown(40)) {
         plrs[0].crouching = true;
     } else {
         plrs[0].crouching = false;
     }
 
-    // Limites écran
+    // Limites écran (kasey)
     plrs[0].posX = constrain(plrs[0].posX, hitboxSize / 2, width - hitboxSize / 2);
 }
 
+// Pesonnage 1 (Maxime)
 function drawPlayer1() {
     fill(0, 0, 255);
 
@@ -115,10 +116,10 @@ function drawPlayer1() {
     }
 }
 
-//Joueur 2
+//Joueur 2 (ASDW)
 function updatePlayer2() {
 
-    // Gauche / Droite (A / D)
+    // Gauche / Droite
     if (keyIsDown(65)) {
         plrs[1].vitesseX -= plrs[1].speed;
     }
@@ -160,6 +161,7 @@ function updatePlayer2() {
     plrs[1].posX = constrain(plrs[1].posX, hitboxSize / 2, width - hitboxSize / 2);
 }
 
+// Pesonnage 2 (Maxime)
 function drawPlayer2() {
     fill(255, 0, 0);
 
