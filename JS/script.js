@@ -23,6 +23,7 @@ let plrs = [
         dashing: null,
         dashingCooldown: false,
         dashInputTimer: 0,
+        lastDirection: "left",
     },
 
     // infos Joueur 2
@@ -41,6 +42,7 @@ let plrs = [
         crouching: false,
         jumping: false,
         dashing: null,
+        dashingCooldown: false,
         dashInputTimer: 0,
     }
 ];
@@ -66,29 +68,66 @@ function draw() {
     updateDash();
 
     plrs[0].dashInputTimer = clamp(plrs[0].dashInputTimer -= 1, 0, 100000)
-    console.log(plrs[0].dashInputTimer)
+    plrs[1].dashInputTimer = clamp(plrs[1].dashInputTimer -= 1, 0, 100000)
 }
 
 function updateDash() {
-    console.log(plrs[0].dashing, plrs[1].dashing)
 
     if (plrs[0].dashing == "left") {
         plrs[0].vitesseX -= plrs[0].speed * 50;
-        if (plrs[0].dashingCooldown == false){
-            plrs[0].dashingCooldown = true;
-            setTimeout(() => {
-                plrs[0].dashingCooldown = true;
-                
-            }, 3000);
-        }
+
+        plrs[0].dashingCooldown = true
+
+        setTimeout(() => {
+            plrs[0].dashing = null;
+        }, 25);
+
+        setTimeout(() => {
+            plrs[0].dashingCooldown = false
+        }, 1000);
         return
     }
     if (plrs[0].dashing == "right") {
         plrs[0].vitesseX += plrs[0].speed * 50;
 
+        plrs[0].dashingCooldown = true
+
+        setTimeout(() => {
+            plrs[0].dashing = null;
+        }, 25);
+
+        setTimeout(() => {
+            plrs[0].dashingCooldown = false
+        }, 1000);
         return
     }
-    if (plrs[0].dashing == null) {
+
+    if (plrs[1].dashing == "left") {
+        plrs[1].vitesseX -= plrs[1].speed * 50;
+
+        plrs[1].dashingCooldown = true
+
+        setTimeout(() => {
+            plrs[1].dashing = null;
+        }, 25);
+
+        setTimeout(() => {
+            plrs[1].dashingCooldown = false
+        }, 1000);
+        return
+    }
+    if (plrs[1].dashing == "right") {
+        plrs[1].vitesseX += plrs[1].speed * 50;
+
+        plrs[1].dashingCooldown = true
+
+        setTimeout(() => {
+            plrs[1].dashing = null;
+        }, 25);
+
+        setTimeout(() => {
+            plrs[1].dashingCooldown = false
+        }, 1000);
         return
     }
 }
@@ -137,9 +176,11 @@ function updatePlayer1() {
     // Accroupissement (Maxime)
     if (keyIsDown(40)) {
         plrs[0].crouching = true;
+        plrs[0].speed = 0.15; //(kasey)
         plrs[0].gravity = 1; //(kasey)
     } else {
         plrs[0].crouching = false;
+        plrs[0].speed = 0.5; //(kasey)
         plrs[0].gravity = 0.6; //(kasey)
     }
 
@@ -212,9 +253,11 @@ function updatePlayer2() {
     // Accroupissement (S)
     if (keyIsDown(83)) {
         plrs[1].crouching = true;
+        plrs[1].speed = 0.15;
         plrs[1].gravity = 1; //(kasey)
     } else {
         plrs[1].crouching = false;
+        plrs[1].speed = 0.5;
         plrs[1].gravity = 0.6; //(kasey)
     }
 
@@ -252,17 +295,49 @@ function drawPlayer2() {
     }
 }
 
+// Détecteur de début d'input
 function keyPressed() {
+    //Dash joueur 0 (kasey)
     if (keyCode == 39) {
-        plrs[0].dashInputTimer = 60;
         if (plrs[0].dashInputTimer > 0) {
-            plrs[0].dashing = "right";
+            if (plrs[0].dashingCooldown == false) {
+                plrs[0].dashing = "right";
+            }
+        } else {
+            plrs[0].dashInputTimer = 20;
         }
     }
     if (keyCode == 37) {
-        plrs[0].dashInputTimer = 60;
         if (plrs[0].dashInputTimer > 0) {
-            plrs[0].dashing = "left"
+            if (plrs[0].dashingCooldown == false) {
+                plrs[0].dashing = "left";
+            }
+        } else {
+            plrs[0].dashInputTimer = 20;
         }
     }
+
+    //Dash joueur 1 (kasey)
+    if (keyCode == 68) {
+        if (plrs[1].dashInputTimer > 0) {
+            if (plrs[1].dashingCooldown == false) {
+                plrs[1].dashing = "right";
+            }
+        } else {
+            plrs[1].dashInputTimer = 20;
+        }
+    }
+    if (keyCode == 65) {
+        if (plrs[1].dashInputTimer > 0) {
+            if (plrs[1].dashingCooldown == false) {
+                plrs[1].dashing = "left";
+            }
+        } else {
+            plrs[1].dashInputTimer = 20;
+        }
+    }
+
+    // Attaque Joueur 1
 }
+
+//Ford Focus
