@@ -8,6 +8,7 @@ let hitboxSize = 50;
 let plrs = [
     {
         vie: 100,
+        maxVie: 100,
         energie: 100,
         posX: 650,
         posY: floorHeight,
@@ -19,11 +20,15 @@ let plrs = [
         friction: 0.85,
         crouching: false,
         jumping: false,
+        dashing: null,
+        dashingCooldown: false,
+        dashInputTimer: 0,
     },
 
-// infos Joueur 2
+    // infos Joueur 2
     {
         vie: 100,
+        maxVie: 100,
         energie: 100,
         posX: 150,
         posY: floorHeight,
@@ -35,10 +40,16 @@ let plrs = [
         friction: 0.85,
         crouching: false,
         jumping: false,
+        dashing: null,
+        dashInputTimer: 0,
     }
 ];
 
 let mainContainer = document.getElementById("mainContainer");
+
+function clamp(num, min, max) {
+    return num < min ? min : num > max ? max : num;
+}
 
 function setup() {
     let canvas = createCanvas(width, height);
@@ -52,6 +63,34 @@ function draw() {
     updatePlayer2();
     drawPlayer1();
     drawPlayer2();
+    updateDash();
+
+    plrs[0].dashInputTimer = clamp(plrs[0].dashInputTimer -= 1, 0, 100000)
+    console.log(plrs[0].dashInputTimer)
+}
+
+function updateDash() {
+    console.log(plrs[0].dashing, plrs[1].dashing)
+
+    if (plrs[0].dashing == "left") {
+        plrs[0].vitesseX -= plrs[0].speed * 50;
+        if (plrs[0].dashingCooldown == false){
+            plrs[0].dashingCooldown = true;
+            setTimeout(() => {
+                plrs[0].dashingCooldown = true;
+                
+            }, 3000);
+        }
+        return
+    }
+    if (plrs[0].dashing == "right") {
+        plrs[0].vitesseX += plrs[0].speed * 50;
+
+        return
+    }
+    if (plrs[0].dashing == null) {
+        return
+    }
 }
 
 //Ligne du sol
@@ -67,6 +106,7 @@ function updatePlayer1() {
     if (keyIsDown(37)) {
         plrs[0].vitesseX -= plrs[0].speed;
     }
+
     if (keyIsDown(39)) {
         plrs[0].vitesseX += plrs[0].speed;
     }
@@ -97,17 +137,36 @@ function updatePlayer1() {
     // Accroupissement (Maxime)
     if (keyIsDown(40)) {
         plrs[0].crouching = true;
+        plrs[0].gravity = 1; //(kasey)
     } else {
         plrs[0].crouching = false;
+        plrs[0].gravity = 0.6; //(kasey)
     }
 
     // Limites écran (kasey)
     plrs[0].posX = constrain(plrs[0].posX, hitboxSize / 2, width - hitboxSize / 2);
+
+    // Mise a jour barre de vie (Maxime)
+    if (keyIsDown(69)) {
+        plrs[0].vie = clamp(plrs[0].vie - 1, 0, 100);
+    }
+
 }
 
 // Pesonnage 1 (Maxime)
 function drawPlayer1() {
-    fill(0, 0, 255);
+
+    // barre de vie plrs1 (Maxime)
+    stroke(0);
+    strokeWeight(4);
+    noFill();
+    rect(10, 10, 200, 20);
+
+    noStroke();
+    fill(255, 0, 0);
+    rect(10, 10, map(plrs[0].vie, 0, plrs[0].maxVie, 0, 200), 20);
+
+    fill("blue");
 
     if (plrs[0].crouching) {
         ellipse(plrs[0].posX, plrs[0].posY + 10, hitboxSize, hitboxSize / 2);
@@ -153,21 +212,57 @@ function updatePlayer2() {
     // Accroupissement (S)
     if (keyIsDown(83)) {
         plrs[1].crouching = true;
+        plrs[1].gravity = 1; //(kasey)
     } else {
         plrs[1].crouching = false;
+        plrs[1].gravity = 0.6; //(kasey)
     }
 
-    // Limites écran
+    // Limites écran (Kasey)
     plrs[1].posX = constrain(plrs[1].posX, hitboxSize / 2, width - hitboxSize / 2);
+
+    // Mise a jour barre de vie
+    if (keyIsDown(82)) {
+        plrs[1].vie = clamp(plrs[1].vie - 1, 0, 100);
+    }
+
+    console.log(plrs[1].vie);
+
 }
 
 // Pesonnage 2 (Maxime)
 function drawPlayer2() {
+
+    // Barre de vie plrs2 (Maxime)
+    stroke(0);
+    strokeWeight(4);
+    noFill();
+    rect(600, 10, 200, 20);
+
+    noStroke();
     fill(255, 0, 0);
+    rect(600, 10, map(plrs[1].vie, 0, plrs[1].maxVie, 0, 200), 20);
+
+    fill("red");
 
     if (plrs[1].crouching) {
         ellipse(plrs[1].posX, plrs[1].posY + 10, hitboxSize, hitboxSize / 2);
     } else {
         ellipse(plrs[1].posX, plrs[1].posY, hitboxSize, hitboxSize);
+    }
+}
+
+function keyPressed() {
+    if (keyCode == 39) {
+        plrs[0].dashInputTimer = 60;
+        if (plrs[0].dashInputTimer > 0) {
+            plrs[0].dashing = "right";
+        }
+    }
+    if (keyCode == 37) {
+        plrs[0].dashInputTimer = 60;
+        if (plrs[0].dashInputTimer > 0) {
+            plrs[0].dashing = "left"
+        }
     }
 }
