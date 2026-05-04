@@ -12,6 +12,7 @@ let plrs = [
         energie: 100,
         last_posX: NaN,
         last_posY: NaN,
+        maxEnergie: 100,
         posX: 650,
         posY: floorHeight,
         vitesseX: 0,
@@ -35,6 +36,7 @@ let plrs = [
         energie: 100,
         last_posX: NaN,
         last_posY: NaN,
+        maxEnergie: 100,
         posX: 150,
         posY: floorHeight,
         vitesseX: 0,
@@ -223,6 +225,10 @@ function updatePlayer1() {
         plrs[0].vie = clamp(plrs[0].vie - 1, 0, 100);
     }
 
+    // Saut vers direction retire energie (Maxime
+    if (plrs[0].dashing == "right" || plrs[0].dashing == "left"){
+        plrs[0].energie = clamp(plrs[0].energie - 2.4, 0, 100);
+    }
 }
 
 // Pesonnage 1 (Maxime)
@@ -237,6 +243,16 @@ function drawPlayer1() {
     noStroke();
     fill(255, 0, 0);
     rect(10, 10, map(plrs[0].vie, 0, plrs[0].maxVie, 0, 200), 20);
+
+    // barre de énergie plrs1 (Maxime)
+    stroke(0);
+    strokeWeight(4);
+    noFill();
+    rect(10, 34 , 150, 20);
+
+    noStroke();
+    fill("orange");
+    rect(10, 34, map(plrs[0].energie, 0, plrs[0].maxEnergie, 0, 150), 20);
 
     fill("blue");
 
@@ -298,9 +314,12 @@ function updatePlayer2() {
     // Mise a jour barre de vie
     if (keyIsDown(keyCodes.Key_R)) {
         plrs[1].vie = clamp(plrs[1].vie - 1, 0, 100);
+    }  
+
+    // Saut vers direction retire energie
+    if (plrs[1].dashing == "right" || plrs[1].dashing == "left"){
+        plrs[1].energie = clamp(plrs[1].energie - 2.5, 0, 100);
     }
-
-
 }
 
 // Pesonnage 2 (Maxime)
@@ -315,6 +334,16 @@ function drawPlayer2() {
     noStroke();
     fill(255, 0, 0);
     rect(600, 10, map(plrs[1].vie, 0, plrs[1].maxVie, 0, 200), 20);
+
+    // barre de énergie plrs2 (Maxime)
+    stroke(0);
+    strokeWeight(4);
+    noFill();
+    rect(650, 34 , 150, 20);
+
+    noStroke();
+    fill("orange");
+    rect(650, 34, map(plrs[1].energie, 0, plrs[1].maxEnergie, 0, 150), 20);
 
     fill("red");
 
