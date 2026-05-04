@@ -4,6 +4,12 @@ let floorHeight = height - 100;
 
 let hitboxSize = 50;
 
+let sprite1
+
+function preload(){
+    idle = loadImage("RESSOURCES/IMAGES/Sprite/idle/IDLE.png")
+    }
+
 // infos Joueur 1
 let plrs = [
     {
@@ -55,11 +61,18 @@ let mainContainer = document.getElementById("mainContainer");
 function setup() {
     let canvas = createCanvas(width, height);
     canvas.parent(mainContainer);
+
+    image(idle, 75, 0,)
+
 }
 
 function draw() {
     background(30);
     drawFloor();
+
+    sprite1.position.x = mouseX;
+    sprite1.position.y = mouseY
+    drawSprite();
 
     // update joueurs
     updatePlayer1();
