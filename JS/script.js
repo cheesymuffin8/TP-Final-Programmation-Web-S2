@@ -10,8 +10,6 @@ let plrs = [
         vie: 100,
         maxVie: 100,
         energie: 100,
-        last_posX: NaN,
-        last_posY: NaN,
         maxEnergie: 100,
         posX: 650,
         posY: floorHeight,
@@ -26,7 +24,7 @@ let plrs = [
         dashing: null,
         dashingCooldown: false,
         dashInputTimer: 0,
-        lastDirection: [-1, 0], // x,y
+        lastDirection: "left",
     },
 
     // infos Joueur 2
@@ -34,8 +32,6 @@ let plrs = [
         vie: 100,
         maxVie: 100,
         energie: 100,
-        last_posX: NaN,
-        last_posY: NaN,
         maxEnergie: 100,
         posX: 150,
         posY: floorHeight,
@@ -50,15 +46,11 @@ let plrs = [
         dashing: null,
         dashingCooldown: false,
         dashInputTimer: 0,
-        lastDirection: [1, 0],
+        lastDirection: "right",
     }
 ];
 
 let mainContainer = document.getElementById("mainContainer");
-
-function clamp(num, min, max) {
-    return num < min ? min : num > max ? max : num;
-}
 
 function setup() {
     let canvas = createCanvas(width, height);
@@ -69,21 +61,6 @@ function draw() {
     background(30);
     drawFloor();
 
-    //calcules Direction
-    if (plrs[0].last_posX == NaN) {
-        plrs[0].last_posX = posX;
-    }
-    if (plrs[0].last_posY == NaN) {
-        plrs[0].last_posY = posY;
-    }
-
-    if (plrs[1].last_posX == NaN) {
-        plrs[1].last_posX = posX;
-    }
-    if (plrs[1].last_posY == NaN) {
-        plrs[1].last_posY = posY;
-    }
-
     // update joueurs
     updatePlayer1();
     updatePlayer2();
@@ -92,16 +69,8 @@ function draw() {
     updateDash();
 
     // timer pour dash
-    plrs[0].dashInputTimer = clamp(plrs[0].dashInputTimer -= 1, 0, 100000)
-    plrs[1].dashInputTimer = clamp(plrs[1].dashInputTimer -= 1, 0, 100000)
-
-    // 
-    if (plrs[0].last_posX - plrs[0].posX > 0 || plrs[0].last_posX - plrs[0].posX < 0) {
-        plrs[0].last_posX = plrs[0].posX
-    }
-    if (plrs[0].last_posY - plrs[0].posY > 0 || plrs[0].last_posY - plrs[0].posY < 0) {
-        plrs[0].last_posY = plrs[0].posY
-    }
+    plrs[0].dashInputTimer = constrain(plrs[0].dashInputTimer -= 1, 0, 100000)
+    plrs[1].dashInputTimer = constrain(plrs[1].dashInputTimer -= 1, 0, 100000)
 }
 
 function updateDash() {
@@ -177,10 +146,12 @@ function updatePlayer1() {
     // Gauche / Droite (Kasey)
     if (keyIsDown(keyCodes.Key_LArrow)) {
         plrs[0].vitesseX -= plrs[0].speed;
+        plrs[0].lastDirection = "left"
     }
 
     if (keyIsDown(keyCodes.Key_RArrow)) {
         plrs[0].vitesseX += plrs[0].speed;
+        plrs[0].lastDirection = "right"
     }
 
     // Friction
@@ -222,12 +193,12 @@ function updatePlayer1() {
 
     // Mise a jour barre de vie (Maxime)
     if (keyIsDown(keyCodes.Key_E)) {
-        plrs[0].vie = clamp(plrs[0].vie - 1, 0, 100);
+        plrs[0].vie = constrain(plrs[0].vie - 1, 0, 100);
     }
 
     // Saut vers direction retire energie (Maxime
     if (plrs[0].dashing == "right" || plrs[0].dashing == "left"){
-        plrs[0].energie = clamp(plrs[0].energie - 2.4, 0, 100);
+        plrs[0].energie = constrain(plrs[0].energie - 2.4, 0, 100);
     }
 }
 
@@ -260,6 +231,13 @@ function drawPlayer1() {
         ellipse(plrs[0].posX, plrs[0].posY + 10, hitboxSize, hitboxSize / 2);
     } else {
         ellipse(plrs[0].posX, plrs[0].posY, hitboxSize, hitboxSize);
+    }
+
+    fill(255,255,255,50)
+    if (plrs[0].lastDirection == "left") {
+        ellipse(plrs[0].posX - hitboxSize, plrs[0].posY, hitboxSize, hitboxSize);
+    } else if (plrs[0].lastDirection == "right") {
+        ellipse(plrs[0].posX + hitboxSize, plrs[0].posY, hitboxSize, hitboxSize);
     }
 }
 
@@ -313,12 +291,12 @@ function updatePlayer2() {
 
     // Mise a jour barre de vie
     if (keyIsDown(keyCodes.Key_R)) {
-        plrs[1].vie = clamp(plrs[1].vie - 1, 0, 100);
+        plrs[1].vie = constrain(plrs[1].vie - 1, 0, 100);
     }  
 
     // Saut vers direction retire energie
     if (plrs[1].dashing == "right" || plrs[1].dashing == "left"){
-        plrs[1].energie = clamp(plrs[1].energie - 2.5, 0, 100);
+        plrs[1].energie = constrain(plrs[1].energie - 2.5, 0, 100);
     }
 }
 
