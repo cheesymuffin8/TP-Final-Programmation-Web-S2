@@ -142,11 +142,11 @@ function drawFloor() {
 function updatePlayer1() {
 
     // Gauche / Droite (Kasey)
-    if (keyIsDown(37)) {
+    if (keyIsDown(keyCodes.Key_LArrow)) {
         plrs[0].vitesseX -= plrs[0].speed;
     }
 
-    if (keyIsDown(39)) {
+    if (keyIsDown(keyCodes.Key_RArrow)) {
         plrs[0].vitesseX += plrs[0].speed;
     }
 
@@ -157,7 +157,7 @@ function updatePlayer1() {
     plrs[0].posX += plrs[0].vitesseX;
 
     // Saut (Maxime)
-    if (keyIsDown(38) && !plrs[0].jumping) {
+    if (keyIsDown(keyCodes.Key_UArrow) && !plrs[0].jumping) {
         plrs[0].vitesseY = plrs[0].jumpForce;
         plrs[0].jumping = true;
     }
@@ -174,7 +174,7 @@ function updatePlayer1() {
     }
 
     // Accroupissement (Maxime)
-    if (keyIsDown(40)) {
+    if (keyIsDown(keyCodes.Key_DArrow)) {
         plrs[0].crouching = true;
         plrs[0].speed = 0.15; //(kasey)
         plrs[0].gravity = 1; //(kasey)
@@ -188,7 +188,7 @@ function updatePlayer1() {
     plrs[0].posX = constrain(plrs[0].posX, hitboxSize / 2, width - hitboxSize / 2);
 
     // Mise a jour barre de vie (Maxime)
-    if (keyIsDown(69)) {
+    if (keyIsDown(keyCodes.Key_E)) {
         plrs[0].vie = clamp(plrs[0].vie - 1, 0, 100);
     }
 
@@ -220,10 +220,10 @@ function drawPlayer1() {
 function updatePlayer2() {
 
     // Gauche / Droite
-    if (keyIsDown(65)) {
+    if (keyIsDown(keyCodes.Key_A)) {
         plrs[1].vitesseX -= plrs[1].speed;
     }
-    if (keyIsDown(68)) {
+    if (keyIsDown(keyCodes.Key_D)) {
         plrs[1].vitesseX += plrs[1].speed;
     }
 
@@ -234,7 +234,7 @@ function updatePlayer2() {
     plrs[1].posX += plrs[1].vitesseX;
 
     // Saut (W)
-    if (keyIsDown(87) && !plrs[1].jumping) {
+    if (keyIsDown(keyCodes.Key_W) && !plrs[1].jumping) {
         plrs[1].vitesseY = plrs[1].jumpForce;
         plrs[1].jumping = true;
     }
@@ -251,7 +251,7 @@ function updatePlayer2() {
     }
 
     // Accroupissement (S)
-    if (keyIsDown(83)) {
+    if (keyIsDown(keyCodes.Key_S)) {
         plrs[1].crouching = true;
         plrs[1].speed = 0.15;
         plrs[1].gravity = 1; //(kasey)
@@ -265,7 +265,7 @@ function updatePlayer2() {
     plrs[1].posX = constrain(plrs[1].posX, hitboxSize / 2, width - hitboxSize / 2);
 
     // Mise a jour barre de vie
-    if (keyIsDown(82)) {
+    if (keyIsDown(keyCodes.Key_R)) {
         plrs[1].vie = clamp(plrs[1].vie - 1, 0, 100);
     }
 
@@ -298,7 +298,7 @@ function drawPlayer2() {
 // Détecteur de début d'input
 function keyPressed() {
     //Dash joueur 0 (kasey)
-    if (keyCode == 39) {
+    if (keyCode == keyCodes.Key_RArrow) {
         if (plrs[0].dashInputTimer > 0) {
             if (plrs[0].dashingCooldown == false) {
                 plrs[0].dashing = "right";
@@ -307,7 +307,7 @@ function keyPressed() {
             plrs[0].dashInputTimer = 20;
         }
     }
-    if (keyCode == 37) {
+    if (keyCode == keyCodes.Key_LArrow) {
         if (plrs[0].dashInputTimer > 0) {
             if (plrs[0].dashingCooldown == false) {
                 plrs[0].dashing = "left";
@@ -318,7 +318,7 @@ function keyPressed() {
     }
 
     //Dash joueur 1 (kasey)
-    if (keyCode == 68) {
+    if (keyCode == keyCodes.Key_D) {
         if (plrs[1].dashInputTimer > 0) {
             if (plrs[1].dashingCooldown == false) {
                 plrs[1].dashing = "right";
@@ -327,7 +327,7 @@ function keyPressed() {
             plrs[1].dashInputTimer = 20;
         }
     }
-    if (keyCode == 65) {
+    if (keyCode == keyCodes.Key_A) {
         if (plrs[1].dashInputTimer > 0) {
             if (plrs[1].dashingCooldown == false) {
                 plrs[1].dashing = "left";
