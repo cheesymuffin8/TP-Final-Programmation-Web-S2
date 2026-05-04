@@ -10,6 +10,8 @@ let plrs = [
         vie: 100,
         maxVie: 100,
         energie: 100,
+        last_posX: NaN,
+        last_posY: NaN,
         posX: 650,
         posY: floorHeight,
         vitesseX: 0,
@@ -23,7 +25,7 @@ let plrs = [
         dashing: null,
         dashingCooldown: false,
         dashInputTimer: 0,
-        lastDirection: "left",
+        lastDirection: [-1, 0], // x,y
     },
 
     // infos Joueur 2
@@ -31,6 +33,8 @@ let plrs = [
         vie: 100,
         maxVie: 100,
         energie: 100,
+        last_posX: NaN,
+        last_posY: NaN,
         posX: 150,
         posY: floorHeight,
         vitesseX: 0,
@@ -44,6 +48,7 @@ let plrs = [
         dashing: null,
         dashingCooldown: false,
         dashInputTimer: 0,
+        lastDirection: [1, 0],
     }
 ];
 
@@ -61,14 +66,40 @@ function setup() {
 function draw() {
     background(30);
     drawFloor();
+
+    //calcules Direction
+    if (plrs[0].last_posX == NaN) {
+        plrs[0].last_posX = posX;
+    }
+    if (plrs[0].last_posY == NaN) {
+        plrs[0].last_posY = posY;
+    }
+
+    if (plrs[1].last_posX == NaN) {
+        plrs[1].last_posX = posX;
+    }
+    if (plrs[1].last_posY == NaN) {
+        plrs[1].last_posY = posY;
+    }
+
+    // update joueurs
     updatePlayer1();
     updatePlayer2();
     drawPlayer1();
     drawPlayer2();
     updateDash();
 
+    // timer pour dash
     plrs[0].dashInputTimer = clamp(plrs[0].dashInputTimer -= 1, 0, 100000)
     plrs[1].dashInputTimer = clamp(plrs[1].dashInputTimer -= 1, 0, 100000)
+
+    // 
+    if (plrs[0].last_posX - plrs[0].posX > 0 || plrs[0].last_posX - plrs[0].posX < 0) {
+        plrs[0].last_posX = plrs[0].posX
+    }
+    if (plrs[0].last_posY - plrs[0].posY > 0 || plrs[0].last_posY - plrs[0].posY < 0) {
+        plrs[0].last_posY = plrs[0].posY
+    }
 }
 
 function updateDash() {
@@ -253,11 +284,11 @@ function updatePlayer2() {
     // Accroupissement (S)
     if (keyIsDown(keyCodes.Key_S)) {
         plrs[1].crouching = true;
-        plrs[1].speed = 0.15;
+        plrs[1].speed = 0.15; //(kasey)
         plrs[1].gravity = 1; //(kasey)
     } else {
         plrs[1].crouching = false;
-        plrs[1].speed = 0.5;
+        plrs[1].speed = 0.5; //(kasey)
         plrs[1].gravity = 0.6; //(kasey)
     }
 
@@ -269,7 +300,6 @@ function updatePlayer2() {
         plrs[1].vie = clamp(plrs[1].vie - 1, 0, 100);
     }
 
-    console.log(plrs[1].vie);
 
 }
 
@@ -339,5 +369,11 @@ function keyPressed() {
 
     // Attaque Joueur 1
 }
+
+// Attaque Joueur 0
+function mouseClicked() {
+
+}
+
 
 //Ford Focus
