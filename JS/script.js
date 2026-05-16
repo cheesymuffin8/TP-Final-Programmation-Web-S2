@@ -67,6 +67,7 @@ function draw() {
     drawPlayer1();
     drawPlayer2();
     updateDash();
+    updateJoystickVisuals();
 
     // timer pour dash
     plrs[0].dashInputTimer = constrain(plrs[0].dashInputTimer -= 1, 0, 100000)
@@ -383,4 +384,32 @@ function mouseClicked() {
 }
 
 
-//Ford Focus
+function updateJoystickVisuals(){
+    let joy1 = document.getElementById("joy1");
+    let joy2 = document.getElementById("joy2");
+
+    // RESET
+    joy1.classList.remove("joy-left");
+    joy1.classList.remove("joy-right");
+    joy2.classList.remove("joy-left");
+    joy2.classList.remove("joy-right");
+
+    // JOUEUR 1
+    if(keyIsDown(keyCodes.Key_A)){
+        joy1.classList.add("joy-left");
+    }
+
+    if(keyIsDown(keyCodes.Key_D)){
+        joy1.classList.add("joy-right");
+    }
+
+    // JOUEUR 2
+    if(keyIsDown(keyCodes.Key_LArrow)){
+        joy2.classList.add("joy-left");
+    }
+
+    if(keyIsDown(keyCodes.Key_RArrow)){
+        joy2.classList.add("joy-right");
+    }
+
+}
