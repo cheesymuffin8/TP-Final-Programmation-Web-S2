@@ -233,3 +233,22 @@ canvas{
 .blue{
     background:#0099ff;
 }
+
+/* Joystick animations */
+
+.joystick{
+
+    transition:transform 0.08s;
+}
+
+.joy-left{
+
+    transform:
+    rotate(-15deg);
+}
+
+.joy-right{
+
+    transform:
+    rotate(15deg);
+}
