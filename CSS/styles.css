@@ -136,3 +136,100 @@ canvas{
     justify-content:center;
     align-items:center;
 }
+
+/* Panel */
+.controls-panel{
+
+    width:100%;
+
+    height:180px;
+
+    background:
+    linear-gradient(
+        to bottom,
+        #4a0000,
+        #180000
+    );
+
+    border:
+    8px solid #660000;
+
+    border-top:none;
+
+    border-radius:
+    0 0 25px 25px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:40px;
+
+    box-shadow:
+    0 0 25px rgba(255,0,0,0.4);
+}
+
+/* Controle joueur */
+.player-controls{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:40px;
+}
+
+/* Joystick */
+.joystick{
+
+    position:relative;
+
+    width:60px;
+    height:60px;
+}
+
+.stick{
+
+    position:absolute;
+
+    width:14px;
+    height:70px;
+
+    background:black;
+
+    left:50%;
+    top:-20px;
+
+    transform:translateX(-50%);
+
+    border-radius:10px;
+}
+
+.ball{
+
+    position:absolute;
+
+    width:45px;
+    height:45px;
+
+    border-radius:50%;
+
+    left:50%;
+    top:-45px;
+
+    transform:translateX(-50%);
+
+    box-shadow:
+    inset -5px -5px 10px rgba(0,0,0,0.5),
+    0 0 15px rgba(255,255,255,0.2);
+}
+
+.red{
+    background:red;
+}
+
+.blue{
+    background:#0099ff;
+}
