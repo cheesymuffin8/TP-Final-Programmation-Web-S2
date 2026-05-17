@@ -264,7 +264,7 @@ function drawPlayer1() {
         runGif.show();
         idleGif.hide();
         runGif.position(
-            plrs[0].posX+262,
+            plrs[0].posX+970,
             plrs[0].posY+125
         );
 
@@ -282,7 +282,7 @@ function drawPlayer1() {
         idleGif.show();
         runGif.hide();
         idleGif.position(
-            plrs[0].posX+260,
+            plrs[0].posX+970,
             plrs[0].posY+125
         );
 
