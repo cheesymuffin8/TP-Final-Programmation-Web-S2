@@ -37,7 +37,7 @@ let plrs = [
         primaryAttackDebounce: false,
 
         // Maxime
-        direction: 1,
+        direction: -1,
         isMoving: false,
 
     },
