@@ -3,12 +3,15 @@ let width = 800;
 let floorHeight = height - 100;
 
 let hitboxSize = 60;
+let energieCostPerDash = 5;
 
 let idleGif;
 let runGif;
 
 let idleGif2;
 let runGif2;
+
+let backgroundImg
 
 // infos Joueur 1
 let plrs = [
@@ -74,6 +77,10 @@ let plrs = [
 
 let mainContainer = document.getElementById("mainContainer");
 
+function preload(){
+    backgroundImg = loadImage("RESOURCES/IMAGES/background.png")
+}
+
 function setup() {
     canvas = createCanvas(width, height);
     canvas.parent(mainContainer);
@@ -84,14 +91,14 @@ function setup() {
     idleGif.parent("mainContainer");
     idleGif.size(180, 180);
     idleGif.style("position", "absolute");
-    idleGif.class("noSelect");
+    idleGif.class("charGif noSelect");
 
     // Courir
     runGif = createImg("RESOURCES/IMAGES/SPRITE/run.gif");
     runGif.parent("mainContainer");
     runGif.size(180, 180);
     runGif.style("position", "absolute");
-    runGif.class("noSelect");
+    runGif.class("charGif noSelect");
 
     // joueur2
     // Immobile
@@ -99,18 +106,18 @@ function setup() {
     idleGif2.parent("mainContainer");
     idleGif2.size(160, 160);
     idleGif2.style("position", "absolute");
-    idleGif2.class("noSelect");
+    idleGif2.class("charGif noSelect");
 
     // Courir
     runGif2 = createImg("RESOURCES/IMAGES/SPRITE2/run.gif");
     runGif2.parent("mainContainer");
     runGif2.size(160, 160);
     runGif2.style("position", "absolute");
-    runGif2.class("noSelect");
+    runGif2.class("charGif noSelect");
 }
 
 function draw() {
-    background(30);
+    background(backgroundImg);
     drawFloor();
 
     // update joueurs
@@ -188,8 +195,8 @@ function updateDash() {
 
 //Ligne du sol
 function drawFloor() {
-    fill(100);
-    rect(0, floorHeight + hitboxSize / 2, width, 10);
+    fill(40, 29, 52);
+    rect(0, floorHeight + hitboxSize / 2, width, 500);
 }
 
 //Joueur 1 (Flèches directionnelles)
@@ -257,31 +264,33 @@ function updatePlayer1() {
 
     // Saut vers direction retire energie (Maxime
     if (plrs[0].dashing == "right" || plrs[0].dashing == "left") {
-        plrs[1].energie = constrain(plrs[1].energie - 2.4, 0, 100);
+        plrs[0].energie = constrain(plrs[0].energie - energieCostPerDash, 0, 100);
     }
 }
 
 // Pesonnage 1 (Maxime)
 function drawPlayer1() {
     // barre de vie plrs1 (Maxime)
-    stroke(0);
-    strokeWeight(4);
-    noFill();
-    rect(600, 10, 200, 20);
 
-    noStroke();
-    fill(255, 0, 0);
-    rect(600, 10, map(plrs[0].vie, 0, plrs[0].maxVie, 0, 200), 20);
+    if (true) {
+        stroke(0);
+        strokeWeight(4);
+        noFill();
+        rect(600, 10, 200, 20);
 
+        noStroke();
+        fill(255, 0, 0);
+        rect(600, 10, map(plrs[0].vie, 0, plrs[0].maxVie, 0, 200), 20);
+    }
     // barre de énergie plrs1 (Maxime)
     stroke(0);
     strokeWeight(4);
     noFill();
-    rect(10, 34, 150, 20);
+    rect(650, 34, 150, 20);
 
     noStroke();
     fill("orange");
-    rect(10, 34, map(plrs[0].energie, 0, plrs[0].maxEnergie, 0, 150), 20);
+    rect(650, 34, map(plrs[0].energie, 0, plrs[0].maxEnergie, 0, 150), 20);
 
     // Gif section (Maxime)
 
@@ -387,13 +396,14 @@ function updatePlayer2() {
 
     // Saut vers direction retire energie
     if (plrs[1].dashing == "right" || plrs[1].dashing == "left") {
-        plrs[0].energie = constrain(plrs[0].energie - 2.5, 0, 100);
+        plrs[1].energie = constrain(plrs[1].energie - energieCostPerDash, 0, 100);
     }
 }
 
 // Pesonnage 2 (Maxime)
 function drawPlayer2() {
     // Barre de vie plrs2 (Maxime)
+    if (true) {
     stroke(0);
     strokeWeight(4);
     noFill();
@@ -402,16 +412,16 @@ function drawPlayer2() {
     noStroke();
     fill(255, 0, 0);
     rect(10, 10, map(plrs[1].vie, 0, plrs[1].maxVie, 0, 200), 20);
-
+    }
     // barre de énergie plrs2 (Maxime)
     stroke(0);
     strokeWeight(4);
     noFill();
-    rect(650, 34, 150, 20);
+    rect(10, 34, 150, 20);
 
     noStroke();
     fill("orange");
-    rect(650, 34, map(plrs[1].energie, 0, plrs[1].maxEnergie, 0, 150), 20);
+    rect(10, 34, map(plrs[1].energie, 0, plrs[1].maxEnergie, 0, 150), 20);
 
     // Gif section (Maxime)
     // Courir
@@ -456,6 +466,10 @@ function drawPlayer2() {
 function keyPressed() {
     //Dash joueur 0 (kasey)
     if (keyCode == keyCodes.Key_RArrow) {
+        if (plrs[0].energie - energieCostPerDash < 0) {
+            return
+        }
+
         if (plrs[0].dashInputTimer > 0) {
             if (plrs[0].dashingCooldown == false) {
                 plrs[0].dashing = "right";
@@ -465,6 +479,10 @@ function keyPressed() {
         }
     }
     if (keyCode == keyCodes.Key_LArrow) {
+        if (plrs[0].energie - energieCostPerDash < 0) {
+            return
+        }
+
         if (plrs[0].dashInputTimer > 0) {
             if (plrs[0].dashingCooldown == false) {
                 plrs[0].dashing = "left";
@@ -476,6 +494,10 @@ function keyPressed() {
 
     //Dash joueur 1 (kasey)
     if (keyCode == keyCodes.Key_D) {
+        if (plrs[1].energie - energieCostPerDash < 0) {
+            return
+        }
+
         if (plrs[1].dashInputTimer > 0) {
             if (plrs[1].dashingCooldown == false) {
                 plrs[1].dashing = "right";
@@ -485,6 +507,10 @@ function keyPressed() {
         }
     }
     if (keyCode == keyCodes.Key_A) {
+        if (plrs[1].energie - energieCostPerDash < 0) {
+            return
+        }
+
         if (plrs[1].dashInputTimer > 0) {
             if (plrs[1].dashingCooldown == false) {
                 plrs[1].dashing = "left";
@@ -586,6 +612,7 @@ function updateJoystickVisuals() {
     }
 }
 
+// source de cette fonction: https://stackoverflow.com/questions/16873323/javascript-sleep-wait-before-continuing
 function sleep(milliseconds) {
     var start = new Date().getTime();
     for (var i = 0; i < 1e7; i++) {

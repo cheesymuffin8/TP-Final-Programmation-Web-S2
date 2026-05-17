@@ -11,8 +11,8 @@ body{
     background:
     radial-gradient(
         circle at top,
-        #3b0000 0%,
-        #170000 40%,
+        #1e003b 0%,
+        #0a0017 40%,
         #050505 100%
     );
 
@@ -268,4 +268,8 @@ canvas{
 
     box-shadow:
     0 0 10px orange;
+}
+
+.charGif{
+    filter: drop-shadow(#ff009d 0px 0px 4px);
 }
