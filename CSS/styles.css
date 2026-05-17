@@ -24,6 +24,13 @@ body{
     overflow:hidden;
 }
 
+.noSelect {
+    pointer-events: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
 /* Borne */
 .arcade-machine{
     width:1000px;

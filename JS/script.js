@@ -75,6 +75,7 @@ function setup() {
     idleGif.parent("mainContainer");
     idleGif.size(90, 90);
     idleGif.style("position", "absolute");
+    idleGif.class("noSelect");
 
     // Courir
     runGif = createImg(
@@ -83,6 +84,7 @@ function setup() {
     runGif.parent("mainContainer");
     runGif.size(90, 90);
     runGif.style("position", "absolute");
+    runGif.class("noSelect");
 }
 
 function draw() {
@@ -299,6 +301,7 @@ function drawPlayer1() {
 
     // Hitbox (Kasey)
     fill(255,255,255, plrs[0].primaryAttack == true? 255 : 63);
+    ellipseMode(CENTER)
     ellipse(plrs[0].posX + (plrs[0].lastDirection == "left"? -hitboxSize/2 : hitboxSize/2), plrs[0].posY, hitboxSize);
 }
 //Joueur 2 (ASDW)
@@ -384,6 +387,7 @@ function drawPlayer2() {
     rect(650, 34, map(plrs[1].energie, 0, plrs[1].maxEnergie, 0, 150), 20);
 
     fill("red");
+    ellipseMode(CENTER)
 
     if (plrs[1].crouching) {
         ellipse(plrs[1].posX, plrs[1].posY + 10, hitboxSize, hitboxSize / 2);
@@ -442,6 +446,17 @@ function mouseClicked() {
     if (plrs[0].primaryAttackDebounce == false) {
         plrs[0].primaryAttackDebounce = true
         plrs[0].primaryAttack = true
+
+        let hitBoxOffset = plrs[0].lastDirection == "left"? -hitboxSize/2 : hitboxSize/2
+        
+        let isColliding = dist(
+            plrs[0].posX + hitBoxOffset, plrs[0].posY,
+            plrs[1].posX, plrs[1].posY
+        ) < hitboxSize
+
+        if (isColliding) {
+            plrs[1].vie = constrain(plrs[1].vie - 5, 0, 100)
+        }
 
         setTimeout(() => {
             plrs[0].primaryAttack = false
