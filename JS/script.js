@@ -230,7 +230,7 @@ function updatePlayer1() {
 
     // Saut vers direction retire energie (Maxime
     if (plrs[0].dashing == "right" || plrs[0].dashing == "left"){
-        plrs[0].energie = constrain(plrs[0].energie - 2.4, 0, 100);
+        plrs[1].energie = constrain(plrs[1].energie - 2.4, 0, 100);
     }
 }
 
@@ -354,7 +354,7 @@ function updatePlayer2() {
 
     // Saut vers direction retire energie
     if (plrs[1].dashing == "right" || plrs[1].dashing == "left"){
-        plrs[1].energie = constrain(plrs[1].energie - 2.5, 0, 100);
+        plrs[0].energie = constrain(plrs[0].energie - 2.5, 0, 100);
     }
 }
 
