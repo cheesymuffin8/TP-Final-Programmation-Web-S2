@@ -7,6 +7,9 @@ let hitboxSize = 50;
 let idleGif;
 let runGif;
 
+let idleGif2;
+let runGif2;
+
 // infos Joueur 1
 let plrs = [
     {
@@ -34,7 +37,7 @@ let plrs = [
         primaryAttackDebounce: false,
 
         // Maxime
-        direction: 1,
+        direction: -1,
         isMoving: false,
 
     },
@@ -55,11 +58,20 @@ let plrs = [
         friction: 0.85,
         crouching: false,
         jumping: false,
+
+        // Kasey
         dashing: null,
         dashingCooldown: false,
         dashInputTimer: 0,
-        lastDirection: "right",
-    }
+        lastDirection: "left",
+        primaryAttack: false,
+        primaryAttackDebounce: false,
+
+        // Maxime
+        direction: 1,
+        isMoving: false,
+
+    },
 ];
 
 let mainContainer = document.getElementById("mainContainer");
@@ -68,23 +80,41 @@ function setup() {
     canvas = createCanvas(width, height);
     canvas.parent(mainContainer);
 
-    // Immobile
-    idleGif = createImg(
-        "RESOURCES/IMAGES/SPRITE/idle.gif"
-    );
-    idleGif.parent("mainContainer");
-    idleGif.size(90, 90);
-    idleGif.style("position", "absolute");
+    // joueur1
+        // Immobile
+        idleGif = createImg(
+            "RESOURCES/IMAGES/SPRITE/idle.gif"
+        );
+        idleGif.parent("mainContainer");
+        idleGif.size(180, 180);
+        idleGif.style("position", "absolute");
     idleGif.class("noSelect");
 
-    // Courir
-    runGif = createImg(
-        "RESOURCES/IMAGES/SPRITE/run.gif"
-    );
-    runGif.parent("mainContainer");
-    runGif.size(90, 90);
-    runGif.style("position", "absolute");
-    runGif.class("noSelect");
+        // Courir
+        runGif = createImg(
+            "RESOURCES/IMAGES/SPRITE/run.gif"
+        );
+        runGif.parent("mainContainer");
+        runGif.size(180, 180);
+        runGif.style("position", "absolute");
+
+    // joueur2
+        // Immobile
+        idleGif2 = createImg(
+            "RESOURCES/IMAGES/SPRITE2/idle.gif"
+        );
+        idleGif2.parent("mainContainer");
+        idleGif2.size(160, 160);
+        idleGif2.style("position", "absolute");
+
+        // Courir
+        runGif2 = createImg(
+            "RESOURCES/IMAGES/SPRITE2/run.gif"
+        );
+        runGif2.parent("mainContainer");
+        runGif2.size(160, 160);
+        runGif2.style("position", "absolute");
+        runGif.class("noSelect");
 }
 
 function draw() {
@@ -192,8 +222,6 @@ function updatePlayer1() {
 
     // Friction
     plrs[0].vitesseX *= plrs[0].friction;
-
-    // Appliquer mouvement
     plrs[0].posX += plrs[0].vitesseX;
 
     // Saut (Maxime)
@@ -268,8 +296,8 @@ function drawPlayer1() {
         runGif.show();
         idleGif.hide();
         runGif.position(
-            plrs[0].posX - 50,
-            plrs[0].posY - 60
+            plrs[0].posX - 80,
+            plrs[0].posY - 134
         );
 
         // Flip direction
@@ -286,8 +314,8 @@ function drawPlayer1() {
         idleGif.show();
         runGif.hide();
         idleGif.position(
-            plrs[0].posX - 51.5,
-            plrs[0].posY - 60
+            plrs[0].posX -97.5,
+            plrs[0].posY - 134
         );
 
         // Flip direction
@@ -306,22 +334,28 @@ function drawPlayer1() {
 }
 //Joueur 2 (ASDW)
 function updatePlayer2() {
+    plrs[1].isMoving = false;
 
-    // Gauche / Droite
+    // Gauche
     if (keyIsDown(keyCodes.Key_A)) {
         plrs[1].vitesseX -= plrs[1].speed;
+        plrs[1].isMoving = true;
+        plrs[1].direction = -1;
+        plrs[1].lastDirection = "left";
     }
+
+    // Droite
     if (keyIsDown(keyCodes.Key_D)) {
         plrs[1].vitesseX += plrs[1].speed;
+        plrs[1].isMoving = true;
+        plrs[1].direction = 1;
+        plrs[1].lastDirection = "right";
     }
 
     // Friction
     plrs[1].vitesseX *= plrs[1].friction;
-
-    // Mouvement
     plrs[1].posX += plrs[1].vitesseX;
 
-    // Saut (W)
     if (keyIsDown(keyCodes.Key_W) && !plrs[1].jumping) {
         plrs[1].vitesseY = plrs[1].jumpForce;
         plrs[1].jumping = true;
@@ -386,14 +420,42 @@ function drawPlayer2() {
     fill("orange");
     rect(650, 34, map(plrs[1].energie, 0, plrs[1].maxEnergie, 0, 150), 20);
 
-    fill("red");
-    ellipseMode(CENTER)
+    // Gif section (Maxime)
+    // Courir
+        if(plrs[1].isMoving){
+            runGif2.show();
+            idleGif2.hide();
+            runGif2.position(
+                plrs[1].posX - 80,
+                plrs[1].posY - 97
+            );
 
-    if (plrs[1].crouching) {
-        ellipse(plrs[1].posX, plrs[1].posY + 10, hitboxSize, hitboxSize / 2);
-    } else {
-        ellipse(plrs[1].posX, plrs[1].posY, hitboxSize, hitboxSize);
-    }
+            // Flip direction
+            if(plrs[1].direction == -1){
+                runGif2.style("transform", "scaleX(-1)");
+            }
+            else{
+                runGif2.style("transform", "scaleX(1)");
+            }
+        }
+
+        // Immobile
+        else{
+            idleGif2.show();
+            runGif2.hide();
+            idleGif2.position(
+                plrs[1].posX -97.5,
+                plrs[1].posY - 97
+            );
+
+            // Flip direction
+            if(plrs[1].direction == -1){
+                idleGif2.style("transform", "scaleX(-1)");
+            }
+            else{
+                idleGif2.style("transform", "scaleX(1)");
+            }
+        }
 }
 
 // Détecteur de début d'input
