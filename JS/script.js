@@ -2,7 +2,7 @@ let height = 600;
 let width = 800;
 let floorHeight = height - 100;
 
-let hitboxSize = 50;
+let hitboxSize = 60;
 
 let idleGif;
 let runGif;
@@ -39,7 +39,6 @@ let plrs = [
         // Maxime
         direction: -1,
         isMoving: false,
-
     },
 
     // infos Joueur 2
@@ -63,14 +62,13 @@ let plrs = [
         dashing: null,
         dashingCooldown: false,
         dashInputTimer: 0,
-        lastDirection: "left",
+        lastDirection: "right",
         primaryAttack: false,
         primaryAttackDebounce: false,
 
         // Maxime
         direction: 1,
         isMoving: false,
-
     },
 ];
 
@@ -81,40 +79,34 @@ function setup() {
     canvas.parent(mainContainer);
 
     // joueur1
-        // Immobile
-        idleGif = createImg(
-            "RESOURCES/IMAGES/SPRITE/idle.gif"
-        );
-        idleGif.parent("mainContainer");
-        idleGif.size(180, 180);
-        idleGif.style("position", "absolute");
+    // Immobile
+    idleGif = createImg("RESOURCES/IMAGES/SPRITE/idle.gif");
+    idleGif.parent("mainContainer");
+    idleGif.size(180, 180);
+    idleGif.style("position", "absolute");
     idleGif.class("noSelect");
 
-        // Courir
-        runGif = createImg(
-            "RESOURCES/IMAGES/SPRITE/run.gif"
-        );
-        runGif.parent("mainContainer");
-        runGif.size(180, 180);
-        runGif.style("position", "absolute");
+    // Courir
+    runGif = createImg("RESOURCES/IMAGES/SPRITE/run.gif");
+    runGif.parent("mainContainer");
+    runGif.size(180, 180);
+    runGif.style("position", "absolute");
+    runGif.class("noSelect");
 
     // joueur2
-        // Immobile
-        idleGif2 = createImg(
-            "RESOURCES/IMAGES/SPRITE2/idle.gif"
-        );
-        idleGif2.parent("mainContainer");
-        idleGif2.size(160, 160);
-        idleGif2.style("position", "absolute");
+    // Immobile
+    idleGif2 = createImg("RESOURCES/IMAGES/SPRITE2/idle.gif");
+    idleGif2.parent("mainContainer");
+    idleGif2.size(160, 160);
+    idleGif2.style("position", "absolute");
+    idleGif2.class("noSelect");
 
-        // Courir
-        runGif2 = createImg(
-            "RESOURCES/IMAGES/SPRITE2/run.gif"
-        );
-        runGif2.parent("mainContainer");
-        runGif2.size(160, 160);
-        runGif2.style("position", "absolute");
-        runGif.class("noSelect");
+    // Courir
+    runGif2 = createImg("RESOURCES/IMAGES/SPRITE2/run.gif");
+    runGif2.parent("mainContainer");
+    runGif2.size(160, 160);
+    runGif2.style("position", "absolute");
+    runGif2.class("noSelect");
 }
 
 function draw() {
@@ -130,68 +122,67 @@ function draw() {
     updateJoystickVisuals();
 
     // timer pour dash
-    plrs[0].dashInputTimer = constrain(plrs[0].dashInputTimer -= 1, 0, 100000)
-    plrs[1].dashInputTimer = constrain(plrs[1].dashInputTimer -= 1, 0, 100000)
+    plrs[0].dashInputTimer = constrain((plrs[0].dashInputTimer -= 1), 0, 100000);
+    plrs[1].dashInputTimer = constrain((plrs[1].dashInputTimer -= 1), 0, 100000);
 }
 
 function updateDash() {
-
     if (plrs[0].dashing == "left") {
         plrs[0].vitesseX -= plrs[0].speed * 50;
 
-        plrs[0].dashingCooldown = true
+        plrs[0].dashingCooldown = true;
 
         setTimeout(() => {
             plrs[0].dashing = null;
         }, 25);
 
         setTimeout(() => {
-            plrs[0].dashingCooldown = false
+            plrs[0].dashingCooldown = false;
         }, 1000);
-        return
+        return;
     }
     if (plrs[0].dashing == "right") {
         plrs[0].vitesseX += plrs[0].speed * 50;
 
-        plrs[0].dashingCooldown = true
+        plrs[0].dashingCooldown = true;
 
         setTimeout(() => {
             plrs[0].dashing = null;
         }, 25);
 
         setTimeout(() => {
-            plrs[0].dashingCooldown = false
+            plrs[0].dashingCooldown = false;
         }, 1000);
-        return
+        return;
     }
 
     if (plrs[1].dashing == "left") {
         plrs[1].vitesseX -= plrs[1].speed * 50;
 
-        plrs[1].dashingCooldown = true
+        plrs[1].dashingCooldown = true;
 
         setTimeout(() => {
             plrs[1].dashing = null;
         }, 25);
 
         setTimeout(() => {
-            plrs[1].dashingCooldown = false
+            plrs[1].dashingCooldown = false;
         }, 1000);
-        return
+        return;
     }
     if (plrs[1].dashing == "right") {
         plrs[1].vitesseX += plrs[1].speed * 50;
 
-        plrs[1].dashingCooldown = true
+        plrs[1].dashingCooldown = true;
 
         setTimeout(() => {
             plrs[1].dashing = null;
         }, 25);
 
         setTimeout(() => {
-            plrs[1].dashingCooldown = false
+            plrs[1].dashingCooldown = false;
         }, 1000);
-        return
+        return;
     }
 }
 
@@ -208,14 +199,14 @@ function updatePlayer1() {
     // Gauche / Droite (Kasey)
     if (keyIsDown(keyCodes.Key_LArrow)) {
         plrs[0].vitesseX -= plrs[0].speed;
-        plrs[0].lastDirection = "left"
+        plrs[0].lastDirection = "left";
         plrs[0].isMoving = true;
         plrs[0].direction = -1;
     }
 
     if (keyIsDown(keyCodes.Key_RArrow)) {
         plrs[0].vitesseX += plrs[0].speed;
-        plrs[0].lastDirection = "right"
+        plrs[0].lastDirection = "right";
         plrs[0].isMoving = true;
         plrs[0].direction = 1;
     }
@@ -253,37 +244,40 @@ function updatePlayer1() {
     }
 
     // Limites écran (kasey)
-    plrs[0].posX = constrain(plrs[0].posX, hitboxSize / 2, width - hitboxSize / 2);
+    plrs[0].posX = constrain(
+        plrs[0].posX,
+        hitboxSize / 2,
+        width - hitboxSize / 2,
+    );
 
     // Mise a jour barre de vie (Maxime)
-    if (keyIsDown(keyCodes.Key_E)) {
-        plrs[0].vie = constrain(plrs[0].vie - 1, 0, 100);
-    }
+    // if (keyIsDown(keyCodes.Key_E)) {
+    //     plrs[0].vie = constrain(plrs[0].vie - 1, 0, 100);
+    // }
 
     // Saut vers direction retire energie (Maxime
-    if (plrs[0].dashing == "right" || plrs[0].dashing == "left"){
+    if (plrs[0].dashing == "right" || plrs[0].dashing == "left") {
         plrs[1].energie = constrain(plrs[1].energie - 2.4, 0, 100);
     }
 }
 
 // Pesonnage 1 (Maxime)
 function drawPlayer1() {
-
     // barre de vie plrs1 (Maxime)
     stroke(0);
     strokeWeight(4);
     noFill();
-    rect(10, 10, 200, 20);
+    rect(600, 10, 200, 20);
 
     noStroke();
     fill(255, 0, 0);
-    rect(10, 10, map(plrs[0].vie, 0, plrs[0].maxVie, 0, 200), 20);
+    rect(600, 10, map(plrs[0].vie, 0, plrs[0].maxVie, 0, 200), 20);
 
     // barre de énergie plrs1 (Maxime)
     stroke(0);
     strokeWeight(4);
     noFill();
-    rect(10, 34 , 150, 20);
+    rect(10, 34, 150, 20);
 
     noStroke();
     fill("orange");
@@ -292,45 +286,41 @@ function drawPlayer1() {
     // Gif section (Maxime)
 
     // Courir
-    if(plrs[0].isMoving){
+    if (plrs[0].isMoving) {
         runGif.show();
         idleGif.hide();
-        runGif.position(
-            plrs[0].posX - 80,
-            plrs[0].posY - 134
-        );
+        runGif.position(plrs[0].posX - 80, plrs[0].posY - 134);
 
         // Flip direction
-        if(plrs[0].direction == -1){
+        if (plrs[0].direction == -1) {
             runGif.style("transform", "scaleX(-1)");
-        }
-        else{
-            runGif.style("transform", "scaleX(1)");
+        } else {
+            runGif.style("transform", "scaleX(1) translateX(-39px)");
         }
     }
 
     // Debout
-    else{
+    else {
         idleGif.show();
         runGif.hide();
-        idleGif.position(
-            plrs[0].posX -97.5,
-            plrs[0].posY - 134
-        );
+        idleGif.position(plrs[0].posX - 97.5, plrs[0].posY - 134);
 
         // Flip direction
-        if(plrs[0].direction == -1){
+        if (plrs[0].direction == -1) {
             idleGif.style("transform", "scaleX(-1)");
-        }
-        else{
+        } else {
             idleGif.style("transform", "scaleX(1)");
         }
     }
 
     // Hitbox (Kasey)
-    fill(255,255,255, plrs[0].primaryAttack == true? 255 : 63);
-    ellipseMode(CENTER)
-    ellipse(plrs[0].posX + (plrs[0].lastDirection == "left"? -hitboxSize/2 : hitboxSize/2), plrs[0].posY, hitboxSize);
+    fill(255, 255, 255, plrs[0].primaryAttack == true ? 255 : 63);
+    ellipse(
+        plrs[0].posX +
+        (plrs[0].lastDirection == "left" ? -hitboxSize / 2 : hitboxSize / 2),
+        plrs[0].posY,
+        hitboxSize,
+    );
 }
 //Joueur 2 (ASDW)
 function updatePlayer2() {
@@ -384,37 +374,40 @@ function updatePlayer2() {
     }
 
     // Limites écran (Kasey)
-    plrs[1].posX = constrain(plrs[1].posX, hitboxSize / 2, width - hitboxSize / 2);
+    plrs[1].posX = constrain(
+        plrs[1].posX,
+        hitboxSize / 2,
+        width - hitboxSize / 2,
+    );
 
     // Mise a jour barre de vie
-    if (keyIsDown(keyCodes.Key_R)) {
-        plrs[1].vie = constrain(plrs[1].vie - 1, 0, 100);
-    }  
+    // if (keyIsDown(keyCodes.Key_R)) {
+    //     plrs[1].vie = constrain(plrs[1].vie - 1, 0, 100);
+    // }
 
     // Saut vers direction retire energie
-    if (plrs[1].dashing == "right" || plrs[1].dashing == "left"){
+    if (plrs[1].dashing == "right" || plrs[1].dashing == "left") {
         plrs[0].energie = constrain(plrs[0].energie - 2.5, 0, 100);
     }
 }
 
 // Pesonnage 2 (Maxime)
 function drawPlayer2() {
-
     // Barre de vie plrs2 (Maxime)
     stroke(0);
     strokeWeight(4);
     noFill();
-    rect(600, 10, 200, 20);
+    rect(10, 10, 200, 20);
 
     noStroke();
     fill(255, 0, 0);
-    rect(600, 10, map(plrs[1].vie, 0, plrs[1].maxVie, 0, 200), 20);
+    rect(10, 10, map(plrs[1].vie, 0, plrs[1].maxVie, 0, 200), 20);
 
     // barre de énergie plrs2 (Maxime)
     stroke(0);
     strokeWeight(4);
     noFill();
-    rect(650, 34 , 150, 20);
+    rect(650, 34, 150, 20);
 
     noStroke();
     fill("orange");
@@ -422,40 +415,41 @@ function drawPlayer2() {
 
     // Gif section (Maxime)
     // Courir
-        if(plrs[1].isMoving){
-            runGif2.show();
-            idleGif2.hide();
-            runGif2.position(
-                plrs[1].posX - 80,
-                plrs[1].posY - 97
-            );
+    if (plrs[1].isMoving) {
+        runGif2.show();
+        idleGif2.hide();
+        runGif2.position(plrs[1].posX - 80, plrs[1].posY - 97);
 
-            // Flip direction
-            if(plrs[1].direction == -1){
-                runGif2.style("transform", "scaleX(-1)");
-            }
-            else{
-                runGif2.style("transform", "scaleX(1)");
-            }
+        // Flip direction
+        if (plrs[1].direction == -1) {
+            runGif2.style("transform", "scaleX(-1)");
+        } else {
+            runGif2.style("transform", "scaleX(1)");
         }
+    }
 
-        // Immobile
-        else{
-            idleGif2.show();
-            runGif2.hide();
-            idleGif2.position(
-                plrs[1].posX -97.5,
-                plrs[1].posY - 97
-            );
+    // Immobile
+    else {
+        idleGif2.show();
+        runGif2.hide();
+        idleGif2.position(plrs[1].posX - 97.5, plrs[1].posY - 97);
 
-            // Flip direction
-            if(plrs[1].direction == -1){
-                idleGif2.style("transform", "scaleX(-1)");
-            }
-            else{
-                idleGif2.style("transform", "scaleX(1)");
-            }
+        // Flip direction
+        if (plrs[1].direction == -1) {
+            idleGif2.style("transform", "scaleX(-1) translateX(-20px)");
+        } else {
+            idleGif2.style("transform", "scaleX(1) translateX(20px)");
         }
+    }
+
+    // Hitbox (Kasey)
+    fill(255, 255, 255, plrs[1].primaryAttack == true ? 255 : 63);
+    ellipse(
+        plrs[1].posX +
+        (plrs[1].lastDirection == "left" ? -hitboxSize / 2 : hitboxSize / 2),
+        plrs[1].posY,
+        hitboxSize,
+    );
 }
 
 // Détecteur de début d'input
@@ -501,33 +495,69 @@ function keyPressed() {
     }
 
     // Attaque Joueur 1
+    if (keyCode == keyCodes.Key_Space) {
+        if (plrs[1].primaryAttackDebounce == false) {
+            plrs[1].primaryAttackDebounce = true;
+            plrs[1].primaryAttack = true;
+
+            let hitBoxOffset =
+                plrs[1].lastDirection == "left" ? -hitboxSize / 2 : hitboxSize / 2;
+
+            let isColliding =
+                dist(
+                    plrs[1].posX + hitBoxOffset,
+                    plrs[1].posY,
+                    plrs[0].posX,
+                    plrs[0].posY,
+                ) < hitboxSize;
+
+            if (isColliding) {
+                plrs[0].vie = constrain(plrs[0].vie - 5, 0, 100);
+                sleep(100)
+            }
+
+            setTimeout(() => {
+                plrs[1].primaryAttack = false;
+            }, 25);
+            setTimeout(() => {
+                plrs[1].primaryAttackDebounce = false;
+        }, 500);
+        }
+    }
 }
 
 // Attaque Joueur 0
 function mouseClicked() {
     if (plrs[0].primaryAttackDebounce == false) {
-        plrs[0].primaryAttackDebounce = true
-        plrs[0].primaryAttack = true
+        plrs[0].primaryAttackDebounce = true;
+        plrs[0].primaryAttack = true;
 
-        let hitBoxOffset = plrs[0].lastDirection == "left"? -hitboxSize/2 : hitboxSize/2
-        
-        let isColliding = dist(
-            plrs[0].posX + hitBoxOffset, plrs[0].posY,
-            plrs[1].posX, plrs[1].posY
-        ) < hitboxSize
+        let hitBoxOffset =
+            plrs[0].lastDirection == "left" ? -hitboxSize / 2 : hitboxSize / 2;
+
+        let isColliding =
+            dist(
+                plrs[0].posX + hitBoxOffset,
+                plrs[0].posY,
+                plrs[1].posX,
+                plrs[1].posY,
+            ) < hitboxSize;
 
         if (isColliding) {
-            plrs[1].vie = constrain(plrs[1].vie - 5, 0, 100)
+            plrs[1].vie = constrain(plrs[1].vie - 5, 0, 100);
+            sleep(100)
         }
 
         setTimeout(() => {
-            plrs[0].primaryAttack = false
-            plrs[0].primaryAttackDebounce = false
+            plrs[0].primaryAttack = false;
         }, 25);
+        setTimeout(() => {
+            plrs[0].primaryAttackDebounce = false;
+        }, 500);
     }
 }
 
-function updateJoystickVisuals(){
+function updateJoystickVisuals() {
     let joy1 = document.getElementById("joy1");
     let joy2 = document.getElementById("joy2");
 
@@ -538,21 +568,29 @@ function updateJoystickVisuals(){
     joy2.classList.remove("joy-right");
 
     // JOUEUR 1
-    if(keyIsDown(keyCodes.Key_A)){
+    if (keyIsDown(keyCodes.Key_A)) {
         joy1.classList.add("joy-left");
     }
 
-    if(keyIsDown(keyCodes.Key_D)){
+    if (keyIsDown(keyCodes.Key_D)) {
         joy1.classList.add("joy-right");
     }
 
     // JOUEUR 2
-    if(keyIsDown(keyCodes.Key_LArrow)){
+    if (keyIsDown(keyCodes.Key_LArrow)) {
         joy2.classList.add("joy-left");
     }
 
-    if(keyIsDown(keyCodes.Key_RArrow)){
+    if (keyIsDown(keyCodes.Key_RArrow)) {
         joy2.classList.add("joy-right");
     }
+}
 
+function sleep(milliseconds) {
+    var start = new Date().getTime();
+    for (var i = 0; i < 1e7; i++) {
+        if (new Date().getTime() - start > milliseconds) {
+            break;
+        }
+    }
 }
