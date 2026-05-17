@@ -450,7 +450,7 @@ function drawPlayer2() {
         primaryAttackGif2.show();
         runGif2.hide();
         idleGif2.hide();
-        primaryAttackGif2.position(plrs[1].posX - 97.5, plrs[1].posY - 93);
+        primaryAttackGif2.position(plrs[1].posX - 75, plrs[1].posY - 93);
 
         if(plrs[1].direction == -1){
             primaryAttackGif2.style("transform", "scaleX(-1)");
@@ -481,7 +481,7 @@ function drawPlayer2() {
         idleGif2.show();
         runGif2.hide();
         primaryAttackGif2.hide();
-        idleGif2.position(plrs[1].posX - 97.5, plrs[1].posY - 93);
+        idleGif2.position(plrs[1].posX - 75, plrs[1].posY - 93);
 
         if(plrs[1].direction == -1){
             idleGif2.style("transform", "scaleX(-1)");
