@@ -6,9 +6,11 @@ let hitboxSize = 60;
 
 let idleGif;
 let runGif;
+let primaryAttackGif;
 
 let idleGif2;
 let runGif2;
+let primaryAttackGif2;
 
 // infos Joueur 1
 let plrs = [
@@ -93,6 +95,13 @@ function setup() {
     runGif.style("position", "absolute");
     runGif.class("noSelect");
 
+    // Attaque primaire
+    primaryAttackGif = createImg("RESOURCES/IMAGES/SPRITE/attack.gif");
+    primaryAttackGif.parent("mainContainer");
+    primaryAttackGif.size(180, 180);
+    primaryAttackGif.style("position", "absolute");
+    primaryAttackGif.class("noSelect");
+
     // joueur2
     // Immobile
     idleGif2 = createImg("RESOURCES/IMAGES/SPRITE2/idle.gif");
@@ -107,6 +116,13 @@ function setup() {
     runGif2.size(160, 160);
     runGif2.style("position", "absolute");
     runGif2.class("noSelect");
+    
+    // Attaque primaire
+    primaryAttackGif2 = createImg("RESOURCES/IMAGES/SPRITE2/attack.gif");
+    primaryAttackGif2.parent("mainContainer");
+    primaryAttackGif2.size(160, 160);
+    primaryAttackGif2.style("position", "absolute");
+    primaryAttackGif2.class("noSelect");
 }
 
 function draw() {
@@ -285,43 +301,57 @@ function drawPlayer1() {
 
     // Gif section (Maxime)
 
-    // Courir
-    if (plrs[0].isMoving) {
-        runGif.show();
+    // Attaque
+    if (plrs[0].primaryAttack) {
+        primaryAttackGif.show();
+        runGif.hide();
         idleGif.hide();
-        runGif.position(plrs[0].posX - 80, plrs[0].posY - 134);
+        primaryAttackGif.position(plrs[0].posX - 80, plrs[0].posY - 130);
 
-        // Flip direction
-        if (plrs[0].direction == -1) {
-            runGif.style("transform", "scaleX(-1)");
-        } else {
-            runGif.style("transform", "scaleX(1) translateX(-39px)");
+        if(plrs[0].direction == -1){
+            primaryAttackGif.style("transform", "scaleX(-1)");
+        }
+        else{
+            primaryAttackGif.style("transform", "scaleX(1)");
         }
     }
 
-    // Debout
+    // Courir
+    else if (plrs[0].isMoving) {
+        runGif.show();
+        idleGif.hide();
+        primaryAttackGif.hide();
+        runGif.position(plrs[0].posX - 80, plrs[0].posY - 130);
+
+        if(plrs[0].direction == -1){
+            runGif.style("transform", "scaleX(-1)");
+        }
+
+        else{
+            runGif.style("transform", "scaleX(1)");
+        }
+    }
+
+    // Idle
     else {
         idleGif.show();
         runGif.hide();
-        idleGif.position(plrs[0].posX - 97.5, plrs[0].posY - 134);
+        primaryAttackGif.hide();
+        idleGif.position(plrs[0].posX - 97.5, plrs[0].posY - 130);
 
-        // Flip direction
-        if (plrs[0].direction == -1) {
+        if(plrs[0].direction == -1){
             idleGif.style("transform", "scaleX(-1)");
-        } else {
+        }
+        else{
             idleGif.style("transform", "scaleX(1)");
         }
     }
 
-    // Hitbox (Kasey)
-    fill(255, 255, 255, plrs[0].primaryAttack == true ? 255 : 63);
-    ellipse(
-        plrs[0].posX +
-        (plrs[0].lastDirection == "left" ? -hitboxSize / 2 : hitboxSize / 2),
-        plrs[0].posY,
-        hitboxSize,
-    );
+    fill(255, 255, 255, plrs[0].primaryAttack ? 255 : 63);
+
+    ellipse(plrs[0].posX +(plrs[0].lastDirection == "left" ? -hitboxSize / 2 : hitboxSize / 2), plrs[0].posY, hitboxSize);
 }
+
 //Joueur 2 (ASDW)
 function updatePlayer2() {
     plrs[1].isMoving = false;
@@ -414,42 +444,56 @@ function drawPlayer2() {
     rect(650, 34, map(plrs[1].energie, 0, plrs[1].maxEnergie, 0, 150), 20);
 
     // Gif section (Maxime)
+
+    // Attaque
+    if (plrs[1].primaryAttack) {
+        primaryAttackGif2.show();
+        runGif2.hide();
+        idleGif2.hide();
+        primaryAttackGif2.position(plrs[1].posX - 97.5, plrs[1].posY - 93);
+
+        if(plrs[1].direction == -1){
+            primaryAttackGif2.style("transform", "scaleX(-1)");
+        }
+        else{
+            primaryAttackGif2.style("transform", "scaleX(1)");
+        }
+    }
+
     // Courir
-    if (plrs[1].isMoving) {
+    else if (plrs[1].isMoving) {
         runGif2.show();
         idleGif2.hide();
-        runGif2.position(plrs[1].posX - 80, plrs[1].posY - 97);
+        primaryAttackGif2.hide();
+        runGif2.position(plrs[1].posX - 80, plrs[1].posY - 93);
 
-        // Flip direction
-        if (plrs[1].direction == -1) {
+        if(plrs[1].direction == -1){
             runGif2.style("transform", "scaleX(-1)");
-        } else {
+        }
+
+        else{
             runGif2.style("transform", "scaleX(1)");
         }
     }
 
-    // Immobile
+    // Idle
     else {
         idleGif2.show();
         runGif2.hide();
-        idleGif2.position(plrs[1].posX - 97.5, plrs[1].posY - 97);
+        primaryAttackGif2.hide();
+        idleGif2.position(plrs[1].posX - 97.5, plrs[1].posY - 93);
 
-        // Flip direction
-        if (plrs[1].direction == -1) {
-            idleGif2.style("transform", "scaleX(-1) translateX(-20px)");
-        } else {
-            idleGif2.style("transform", "scaleX(1) translateX(20px)");
+        if(plrs[1].direction == -1){
+            idleGif2.style("transform", "scaleX(-1)");
+        }
+        else{
+            idleGif2.style("transform", "scaleX(1)");
         }
     }
 
-    // Hitbox (Kasey)
-    fill(255, 255, 255, plrs[1].primaryAttack == true ? 255 : 63);
-    ellipse(
-        plrs[1].posX +
-        (plrs[1].lastDirection == "left" ? -hitboxSize / 2 : hitboxSize / 2),
-        plrs[1].posY,
-        hitboxSize,
-    );
+    fill(255, 255, 255, plrs[1].primaryAttack ? 255 : 63);
+
+    ellipse(plrs[1].posX +(plrs[1].lastDirection == "left" ? -hitboxSize / 2 : hitboxSize / 2), plrs[1].posY, hitboxSize);
 }
 
 // Détecteur de début d'input
@@ -518,7 +562,7 @@ function keyPressed() {
 
             setTimeout(() => {
                 plrs[1].primaryAttack = false;
-            }, 25);
+            }, 400);
             setTimeout(() => {
                 plrs[1].primaryAttackDebounce = false;
         }, 500);
@@ -550,7 +594,7 @@ function mouseClicked() {
 
         setTimeout(() => {
             plrs[0].primaryAttack = false;
-        }, 25);
+        }, 400);
         setTimeout(() => {
             plrs[0].primaryAttackDebounce = false;
         }, 500);
