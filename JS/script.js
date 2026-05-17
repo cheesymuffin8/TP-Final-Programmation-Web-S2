@@ -71,7 +71,7 @@ function setup() {
         "RESOURCES/IMAGES/SPRITE/idle.gif"
     );
     idleGif.parent("mainContainer");
-    idleGif.size(90, 90);
+    idleGif.size(180, 180);
     idleGif.style("position", "absolute");
 
     // Courir
@@ -79,7 +79,7 @@ function setup() {
         "RESOURCES/IMAGES/SPRITE/run.gif"
     );
     runGif.parent("mainContainer");
-    runGif.size(90, 90);
+    runGif.size(180, 180);
     runGif.style("position", "absolute");
 }
 
@@ -264,8 +264,8 @@ function drawPlayer1() {
         runGif.show();
         idleGif.hide();
         runGif.position(
-            plrs[0].posX - 50,
-            plrs[0].posY - 60
+            plrs[0].posX - 80,
+            plrs[0].posY - 134
         );
 
         // Flip direction
@@ -282,8 +282,8 @@ function drawPlayer1() {
         idleGif.show();
         runGif.hide();
         idleGif.position(
-            plrs[0].posX - 51.5,
-            plrs[0].posY - 60
+            plrs[0].posX -97.5,
+            plrs[0].posY - 134
         );
 
         // Flip direction
