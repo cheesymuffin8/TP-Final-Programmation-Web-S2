@@ -63,22 +63,22 @@ let plrs = [
 let mainContainer = document.getElementById("mainContainer");
 
 function setup() {
-    let canvas = createCanvas(width, height);
+    canvas = createCanvas(width, height);
     canvas.parent(mainContainer);
 
-    // GIF IDLE
+    // Immobile
     idleGif = createImg(
         "RESOURCES/IMAGES/SPRITE/idle.gif"
     );
-
+    idleGif.parent("mainContainer");
     idleGif.size(90, 90);
     idleGif.style("position", "absolute");
 
-    // GIF RUN
+    // Courir
     runGif = createImg(
         "RESOURCES/IMAGES/SPRITE/run.gif"
     );
-
+    runGif.parent("mainContainer");
     runGif.size(90, 90);
     runGif.style("position", "absolute");
 }
@@ -264,8 +264,8 @@ function drawPlayer1() {
         runGif.show();
         idleGif.hide();
         runGif.position(
-            plrs[0].posX+970,
-            plrs[0].posY+125
+            plrs[0].posX - 50,
+            plrs[0].posY - 60
         );
 
         // Flip direction
@@ -282,8 +282,8 @@ function drawPlayer1() {
         idleGif.show();
         runGif.hide();
         idleGif.position(
-            plrs[0].posX+970,
-            plrs[0].posY+125
+            plrs[0].posX - 51.5,
+            plrs[0].posY - 60
         );
 
         // Flip direction
