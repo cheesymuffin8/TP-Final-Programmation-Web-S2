@@ -66,14 +66,21 @@ function setup() {
     let canvas = createCanvas(width, height);
     canvas.parent(mainContainer);
 
+    // GIF IDLE
     idleGif = createImg(
-    "RESOURCES/IMAGES/SPRITE/idle.gif");
+        "RESOURCES/IMAGES/SPRITE/idle.gif"
+    );
 
+    idleGif.size(90, 90);
+    idleGif.style("position", "absolute");
+
+    // GIF RUN
     runGif = createImg(
-    "RESOURCES/IMAGES/SPRITE/run.gif");
+        "RESOURCES/IMAGES/SPRITE/run.gif"
+    );
 
-    idleGif.hide();
-    runGif.hide();
+    runGif.size(90, 90);
+    runGif.style("position", "absolute");
 }
 
 function draw() {
@@ -250,44 +257,46 @@ function drawPlayer1() {
     fill("orange");
     rect(10, 34, map(plrs[0].energie, 0, plrs[0].maxEnergie, 0, 150), 20);
 
-    // Sprite (Maxime)
+    // Gif section (Maxime)
 
-    push();
-
-    translate(plrs[0].posX, plrs[0].posY);
-
-    scale(plrs[0].direction, 1);
-
-    imageMode(CENTER);
-
-    // RUN
+    // Courir
     if(plrs[0].isMoving){
-        drawingContext.drawImage(
-            runGif.elt,
-            -45,
-            -65,
-            90,
-            90
+        runGif.show();
+        idleGif.hide();
+        runGif.position(
+            plrs[0].posX+262,
+            plrs[0].posY+125
         );
+
+        // Flip direction
+        if(plrs[0].direction == -1){
+            runGif.style("transform", "scaleX(-1)");
+        }
+        else{
+            runGif.style("transform", "scaleX(1)");
+        }
     }
-    
-    // IDLE
+
+    // Debout
     else{
-        drawingContext.drawImage(
-            idleGif.elt,
-            -45,
-            -65,
-            90,
-            90
+        idleGif.show();
+        runGif.hide();
+        idleGif.position(
+            plrs[0].posX+260,
+            plrs[0].posY+125
         );
+
+        // Flip direction
+        if(plrs[0].direction == -1){
+            idleGif.style("transform", "scaleX(-1)");
+        }
+        else{
+            idleGif.style("transform", "scaleX(1)");
+        }
     }
 
-    pop();
-
-    // Hitbox (Maxime)
-
+    // Hitbox (Kasey)
     fill(255,255,255,40);
-
     ellipse(plrs[0].posX, plrs[0].posY, hitboxSize);
 }
 //Joueur 2 (ASDW)
