@@ -30,6 +30,8 @@ let plrs = [
         dashingCooldown: false,
         dashInputTimer: 0,
         lastDirection: "left",
+        primaryAttack: false,
+        primaryAttackDebounce: false,
 
         // Maxime
         direction: 1,
@@ -296,8 +298,8 @@ function drawPlayer1() {
     }
 
     // Hitbox (Kasey)
-    fill(255,255,255,40);
-    ellipse(plrs[0].posX, plrs[0].posY, hitboxSize);
+    fill(255,255,255, plrs[0].primaryAttack == true? 255 : 63);
+    ellipse(plrs[0].posX + (plrs[0].lastDirection == "left"? -hitboxSize/2 : hitboxSize/2), plrs[0].posY, hitboxSize);
 }
 //Joueur 2 (ASDW)
 function updatePlayer2() {
@@ -437,9 +439,16 @@ function keyPressed() {
 
 // Attaque Joueur 0
 function mouseClicked() {
+    if (plrs[0].primaryAttackDebounce == false) {
+        plrs[0].primaryAttackDebounce = true
+        plrs[0].primaryAttack = true
 
+        setTimeout(() => {
+            plrs[0].primaryAttack = false
+            plrs[0].primaryAttackDebounce = false
+        }, 25);
+    }
 }
-
 
 function updateJoystickVisuals(){
     let joy1 = document.getElementById("joy1");
