@@ -4,6 +4,9 @@ let floorHeight = height - 100;
 
 let hitboxSize = 50;
 
+let idleGif;
+let runGif;
+
 // infos Joueur 1
 let plrs = [
     {
@@ -21,10 +24,17 @@ let plrs = [
         friction: 0.85,
         crouching: false,
         jumping: false,
+
+        // Kasey
         dashing: null,
         dashingCooldown: false,
         dashInputTimer: 0,
         lastDirection: "left",
+
+        // Maxime
+        direction: 1,
+        isMoving: false,
+
     },
 
     // infos Joueur 2
@@ -55,6 +65,15 @@ let mainContainer = document.getElementById("mainContainer");
 function setup() {
     let canvas = createCanvas(width, height);
     canvas.parent(mainContainer);
+
+    idleGif = createImg(
+    "RESOURCES/IMAGES/SPRITE/idle.gif");
+
+    runGif = createImg(
+    "RESOURCES/IMAGES/SPRITE/run.gif");
+
+    idleGif.hide();
+    runGif.hide();
 }
 
 function draw() {
@@ -143,16 +162,21 @@ function drawFloor() {
 
 //Joueur 1 (Flèches directionnelles)
 function updatePlayer1() {
+    plrs[0].isMoving = false;
 
     // Gauche / Droite (Kasey)
     if (keyIsDown(keyCodes.Key_LArrow)) {
         plrs[0].vitesseX -= plrs[0].speed;
         plrs[0].lastDirection = "left"
+        plrs[0].isMoving = true;
+        plrs[0].direction = -1;
     }
 
     if (keyIsDown(keyCodes.Key_RArrow)) {
         plrs[0].vitesseX += plrs[0].speed;
         plrs[0].lastDirection = "right"
+        plrs[0].isMoving = true;
+        plrs[0].direction = 1;
     }
 
     // Friction
@@ -226,22 +250,46 @@ function drawPlayer1() {
     fill("orange");
     rect(10, 34, map(plrs[0].energie, 0, plrs[0].maxEnergie, 0, 150), 20);
 
-    fill("blue");
+    // Sprite (Maxime)
 
-    if (plrs[0].crouching) {
-        ellipse(plrs[0].posX, plrs[0].posY + 10, hitboxSize, hitboxSize / 2);
-    } else {
-        ellipse(plrs[0].posX, plrs[0].posY, hitboxSize, hitboxSize);
+    push();
+
+    translate(plrs[0].posX, plrs[0].posY);
+
+    scale(plrs[0].direction, 1);
+
+    imageMode(CENTER);
+
+    // RUN
+    if(plrs[0].isMoving){
+        drawingContext.drawImage(
+            runGif.elt,
+            -45,
+            -65,
+            90,
+            90
+        );
+    }
+    
+    // IDLE
+    else{
+        drawingContext.drawImage(
+            idleGif.elt,
+            -45,
+            -65,
+            90,
+            90
+        );
     }
 
-    fill(255,255,255,50)
-    if (plrs[0].lastDirection == "left") {
-        ellipse(plrs[0].posX - hitboxSize, plrs[0].posY, hitboxSize, hitboxSize);
-    } else if (plrs[0].lastDirection == "right") {
-        ellipse(plrs[0].posX + hitboxSize, plrs[0].posY, hitboxSize, hitboxSize);
-    }
+    pop();
+
+    // Hitbox (Maxime)
+
+    fill(255,255,255,40);
+
+    ellipse(plrs[0].posX, plrs[0].posY, hitboxSize);
 }
-
 //Joueur 2 (ASDW)
 function updatePlayer2() {
 
