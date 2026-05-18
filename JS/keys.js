@@ -10,6 +10,7 @@ let keyCodes = {
     Key_LArrow: 37,
     Key_RArrow: 39,
     Key_DArrow: 40,
+    Key_LCTRL: 17,
     Key_RCTRL: 223,
 
     Key_E: 69,

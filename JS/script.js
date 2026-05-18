@@ -668,7 +668,7 @@ function keyPressed() {
     }
 
     // Guérir Joueur 0 (Kasey)
-    if (keyCode == keyCodes.Key_RCTRL) {
+    if (keyCode == keyCodes.Key_RCTRL || keyCode == keyCodes.Key_LCTRL) {
         if (plrs[0].healDebounce == false) {
             plrs[0].healDebounce = true;
             plrs[0].vie = constrain(plrs[0].vie + 25, 0, 100)
