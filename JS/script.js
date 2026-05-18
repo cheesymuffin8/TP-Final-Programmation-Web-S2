@@ -3,7 +3,11 @@ let width = 800;
 let floorHeight = height - 100;
 
 let hitboxSize = 60;
-let energieCostPerDash = 5;
+let energieCostPerDash = 15;
+let damage = 5;
+let energyGainOnHit = 25;
+let healAmount = 15
+let healCooldownTime = 10 // secondes
 
 let idleGif;
 let runGif;
@@ -13,7 +17,14 @@ let idleGif2;
 let runGif2;
 let primaryAttackGif2;
 
-let backgroundImg
+let backgroundImg;
+
+let energyRegenTickDebounce = false;
+
+let endScreen = document.getElementById("endScreen")
+let endScreenMainTitle = document.getElementById("endScreenMainTitle")
+let deathScreenShown = false;
+let endScreenReplayButton = document.getElementById("endScreenReplayButton")
 
 // infos Joueur 1
 let plrs = [
@@ -40,6 +51,7 @@ let plrs = [
         lastDirection: "left",
         primaryAttack: false,
         primaryAttackDebounce: false,
+        healDebounce: false,
 
         // Maxime
         direction: -1,
@@ -70,6 +82,7 @@ let plrs = [
         lastDirection: "right",
         primaryAttack: false,
         primaryAttackDebounce: false,
+        healDebounce: false,
 
         // Maxime
         direction: 1,
@@ -79,7 +92,7 @@ let plrs = [
 
 let mainContainer = document.getElementById("mainContainer");
 
-function preload(){
+function preload() {
     backgroundImg = loadImage("RESOURCES/IMAGES/background.png")
 }
 
@@ -107,7 +120,7 @@ function setup() {
     primaryAttackGif.parent("mainContainer");
     primaryAttackGif.size(180, 180);
     primaryAttackGif.style("position", "absolute");
-    primaryAttackGif.class("noSelect");
+    primaryAttackGif.class("charGif noSelect");
 
     // joueur2
     // Immobile
@@ -123,32 +136,52 @@ function setup() {
     runGif2.size(160, 160);
     runGif2.style("position", "absolute");
     runGif2.class("charGif noSelect");
-    
+
     // Attaque primaire
     primaryAttackGif2 = createImg("RESOURCES/IMAGES/SPRITE2/attack.gif");
     primaryAttackGif2.parent("mainContainer");
     primaryAttackGif2.size(160, 160);
     primaryAttackGif2.style("position", "absolute");
-    primaryAttackGif2.class("noSelect");
+    primaryAttackGif2.class("charGif noSelect");
 }
 
 function draw() {
+
+
+
     background(backgroundImg);
     drawFloor();
 
-    // update joueurs
-    updatePlayer1();
-    updatePlayer2();
+    // actualiser joueurs
     drawPlayer1();
     drawPlayer2();
+
+    if (deathScreenShown == true) {
+        return
+    }
+
+    updatePlayer1();
+    updatePlayer2();
     updateDash();
     updateJoystickVisuals();
 
     // timer pour dash
     plrs[0].dashInputTimer = constrain((plrs[0].dashInputTimer -= 1), 0, 100000);
     plrs[1].dashInputTimer = constrain((plrs[1].dashInputTimer -= 1), 0, 100000);
+
+    if (energyRegenTickDebounce == false) {
+        energyRegenTickDebounce = true
+
+        plrs[0].energie = constrain(plrs[0].energie += 1, 0, 100)
+        plrs[1].energie = constrain(plrs[1].energie += 1, 0, 100)
+
+        setTimeout(() => {
+            energyRegenTickDebounce = false
+        }, 500);
+    }
 }
 
+// saut directionnel (Kasey)
 function updateDash() {
     if (plrs[0].dashing == "left") {
         plrs[0].vitesseX -= plrs[0].speed * 50;
@@ -209,7 +242,7 @@ function updateDash() {
     }
 }
 
-//Ligne du sol
+//sol
 function drawFloor() {
     fill(40, 29, 52);
     rect(0, floorHeight + hitboxSize / 2, width, 500);
@@ -242,6 +275,7 @@ function updatePlayer1() {
     if (keyIsDown(keyCodes.Key_UArrow) && !plrs[0].jumping) {
         plrs[0].vitesseY = plrs[0].jumpForce;
         plrs[0].jumping = true;
+        newSound("JumpSFX.mp3", 0.7)
     }
 
     // Gravité (Maxime)
@@ -258,27 +292,23 @@ function updatePlayer1() {
     // Accroupissement (Maxime)
     if (keyIsDown(keyCodes.Key_DArrow)) {
         plrs[0].crouching = true;
-        plrs[0].speed = 0.15; //(kasey)
-        plrs[0].gravity = 1; //(kasey)
+        plrs[0].speed = 0.15; //(Kasey)
+        plrs[0].gravity = 1; //(Kasey)
     } else {
         plrs[0].crouching = false;
-        plrs[0].speed = 0.5; //(kasey)
-        plrs[0].gravity = 0.6; //(kasey)
+        plrs[0].speed = 0.5; //(Kasey)
+        plrs[0].gravity = 0.6; //(Kasey)
     }
 
-    // Limites écran (kasey)
-    plrs[0].posX = constrain(
-        plrs[0].posX,
-        hitboxSize / 2,
-        width - hitboxSize / 2,
-    );
+    // Limites écran (Kasey)
+    plrs[0].posX = constrain(plrs[0].posX, hitboxSize / 2, width - hitboxSize / 2);
 
     // Mise a jour barre de vie (Maxime)
     // if (keyIsDown(keyCodes.Key_E)) {
     //     plrs[0].vie = constrain(plrs[0].vie - 1, 0, 100);
     // }
 
-    // Saut vers direction retire energie (Maxime
+    // Saut vers direction retire energie (Maxime)
     if (plrs[0].dashing == "right" || plrs[0].dashing == "left") {
         plrs[0].energie = constrain(plrs[0].energie - energieCostPerDash, 0, 100);
     }
@@ -288,16 +318,15 @@ function updatePlayer1() {
 function drawPlayer1() {
     // barre de vie plrs1 (Maxime)
 
-    if (true) {
-        stroke(0);
-        strokeWeight(4);
-        noFill();
-        rect(600, 10, 200, 20);
+    stroke(0);
+    strokeWeight(4);
+    noFill();
+    rect(600, 10, 200, 20);
 
-        noStroke();
-        fill(255, 0, 0);
-        rect(600, 10, map(plrs[0].vie, 0, plrs[0].maxVie, 0, 200), 20);
-    }
+    noStroke();
+    fill(255, 0, 80);
+    rect(600, 10, map(plrs[0].vie, 0, plrs[0].maxVie, 0, 200), 20);
+
     // barre de énergie plrs1 (Maxime)
     stroke(0);
     strokeWeight(4);
@@ -305,7 +334,7 @@ function drawPlayer1() {
     rect(650, 34, 150, 20);
 
     noStroke();
-    fill("orange");
+    fill("cyan");
     rect(650, 34, map(plrs[0].energie, 0, plrs[0].maxEnergie, 0, 150), 20);
 
     // Gif section (Maxime)
@@ -317,10 +346,10 @@ function drawPlayer1() {
         idleGif.hide();
         primaryAttackGif.position(plrs[0].posX - 80, plrs[0].posY - 130);
 
-        if(plrs[0].direction == -1){
+        if (plrs[0].direction == -1) {
             primaryAttackGif.style("transform", "scaleX(-1)");
         }
-        else{
+        else {
             primaryAttackGif.style("transform", "scaleX(1)");
         }
     }
@@ -332,11 +361,11 @@ function drawPlayer1() {
         primaryAttackGif.hide();
         runGif.position(plrs[0].posX - 80, plrs[0].posY - 130);
 
-        if(plrs[0].direction == -1){
+        if (plrs[0].direction == -1) {
             runGif.style("transform", "scaleX(-1)");
         }
 
-        else{
+        else {
             runGif.style("transform", "scaleX(1)");
         }
     }
@@ -348,17 +377,17 @@ function drawPlayer1() {
         primaryAttackGif.hide();
         idleGif.position(plrs[0].posX - 97.5, plrs[0].posY - 130);
 
-        if(plrs[0].direction == -1){
+        if (plrs[0].direction == -1) {
             idleGif.style("transform", "scaleX(-1)");
         }
-        else{
+        else {
             idleGif.style("transform", "scaleX(1)");
         }
     }
 
-    fill(255, 255, 255, plrs[0].primaryAttack ? 255 : 63);
-
-    ellipse(plrs[0].posX +(plrs[0].lastDirection == "left" ? -hitboxSize / 2 : hitboxSize / 2), plrs[0].posY, hitboxSize);
+    // Visuel Débug du hitbox de l'attaque
+    // fill(255, 255, 255, plrs[0].primaryAttack ? 255 : 63);
+    // ellipse(plrs[0].posX +(plrs[0].lastDirection == "left" ? -hitboxSize / 2 : hitboxSize / 2), plrs[0].posY, hitboxSize);
 }
 
 //Joueur 2 (ASDW)
@@ -386,6 +415,7 @@ function updatePlayer2() {
     plrs[1].posX += plrs[1].vitesseX;
 
     if (keyIsDown(keyCodes.Key_W) && !plrs[1].jumping) {
+        newSound("JumpSFX.mp3", 0.7)
         plrs[1].vitesseY = plrs[1].jumpForce;
         plrs[1].jumping = true;
     }
@@ -399,17 +429,18 @@ function updatePlayer2() {
         plrs[1].posY = floorHeight;
         plrs[1].vitesseY = 0;
         plrs[1].jumping = false;
+
     }
 
     // Accroupissement (S)
     if (keyIsDown(keyCodes.Key_S)) {
         plrs[1].crouching = true;
-        plrs[1].speed = 0.15; //(kasey)
-        plrs[1].gravity = 1; //(kasey)
+        plrs[1].speed = 0.15; //(Kasey)
+        plrs[1].gravity = 1; //(Kasey)
     } else {
         plrs[1].crouching = false;
-        plrs[1].speed = 0.5; //(kasey)
-        plrs[1].gravity = 0.6; //(kasey)
+        plrs[1].speed = 0.5; //(Kasey)
+        plrs[1].gravity = 0.6; //(Kasey)
     }
 
     // Limites écran (Kasey)
@@ -433,16 +464,16 @@ function updatePlayer2() {
 // Pesonnage 2 (Maxime)
 function drawPlayer2() {
     // Barre de vie plrs2 (Maxime)
-    if (true) {
+
     stroke(0);
     strokeWeight(4);
     noFill();
     rect(10, 10, 200, 20);
 
     noStroke();
-    fill(255, 0, 0);
+    fill(255, 0, 80);
     rect(10, 10, map(plrs[1].vie, 0, plrs[1].maxVie, 0, 200), 20);
-    }
+
     // barre de énergie plrs2 (Maxime)
     stroke(0);
     strokeWeight(4);
@@ -450,7 +481,7 @@ function drawPlayer2() {
     rect(10, 34, 150, 20);
 
     noStroke();
-    fill("orange");
+    fill("cyan");
     rect(10, 34, map(plrs[1].energie, 0, plrs[1].maxEnergie, 0, 150), 20);
 
     // Gif section (Maxime)
@@ -462,10 +493,10 @@ function drawPlayer2() {
         idleGif2.hide();
         primaryAttackGif2.position(plrs[1].posX - 75, plrs[1].posY - 93);
 
-        if(plrs[1].direction == -1){
+        if (plrs[1].direction == -1) {
             primaryAttackGif2.style("transform", "scaleX(-1)");
         }
-        else{
+        else {
             primaryAttackGif2.style("transform", "scaleX(1)");
         }
     }
@@ -477,11 +508,11 @@ function drawPlayer2() {
         primaryAttackGif2.hide();
         runGif2.position(plrs[1].posX - 80, plrs[1].posY - 93);
 
-        if(plrs[1].direction == -1){
+        if (plrs[1].direction == -1) {
             runGif2.style("transform", "scaleX(-1)");
         }
 
-        else{
+        else {
             runGif2.style("transform", "scaleX(1)");
         }
     }
@@ -493,22 +524,22 @@ function drawPlayer2() {
         primaryAttackGif2.hide();
         idleGif2.position(plrs[1].posX - 75, plrs[1].posY - 93);
 
-        if(plrs[1].direction == -1){
+        if (plrs[1].direction == -1) {
             idleGif2.style("transform", "scaleX(-1)");
         }
-        else{
+        else {
             idleGif2.style("transform", "scaleX(1)");
         }
     }
 
-    fill(255, 255, 255, plrs[1].primaryAttack ? 255 : 63);
-
-    ellipse(plrs[1].posX +(plrs[1].lastDirection == "left" ? -hitboxSize / 2 : hitboxSize / 2), plrs[1].posY, hitboxSize);
+    // Visuel Débug du hitbox de l'attaque
+    // fill(255, 255, 255, plrs[1].primaryAttack ? 255 : 63);
+    // ellipse(plrs[1].posX +(plrs[1].lastDirection == "left" ? -hitboxSize / 2 : hitboxSize / 2), plrs[1].posY, hitboxSize);
 }
 
 // Détecteur de début d'input
 function keyPressed() {
-    //Dash joueur 0 (kasey)
+    //Dash joueur 0 (Kasey)
     if (keyCode == keyCodes.Key_RArrow) {
         if (plrs[0].energie - energieCostPerDash < 0) {
             return
@@ -517,6 +548,7 @@ function keyPressed() {
         if (plrs[0].dashInputTimer > 0) {
             if (plrs[0].dashingCooldown == false) {
                 plrs[0].dashing = "right";
+                newSound("DashSFX.wav", 0.7);
             }
         } else {
             plrs[0].dashInputTimer = 20;
@@ -530,13 +562,14 @@ function keyPressed() {
         if (plrs[0].dashInputTimer > 0) {
             if (plrs[0].dashingCooldown == false) {
                 plrs[0].dashing = "left";
+                newSound("DashSFX.wav", 0.7);
             }
         } else {
             plrs[0].dashInputTimer = 20;
         }
     }
 
-    //Dash joueur 1 (kasey)
+    //Dash joueur 1 (Kasey)
     if (keyCode == keyCodes.Key_D) {
         if (plrs[1].energie - energieCostPerDash < 0) {
             return
@@ -545,6 +578,7 @@ function keyPressed() {
         if (plrs[1].dashInputTimer > 0) {
             if (plrs[1].dashingCooldown == false) {
                 plrs[1].dashing = "right";
+                newSound("DashSFX.wav", 0.7);
             }
         } else {
             plrs[1].dashInputTimer = 20;
@@ -558,14 +592,20 @@ function keyPressed() {
         if (plrs[1].dashInputTimer > 0) {
             if (plrs[1].dashingCooldown == false) {
                 plrs[1].dashing = "left";
+                newSound("DashSFX.wav", 0.7);
             }
         } else {
             plrs[1].dashInputTimer = 20;
         }
     }
 
-    // Attaque Joueur 1
+    // Attaque Joueur 1 (Kasey)
     if (keyCode == keyCodes.Key_Space) {
+
+        if (deathScreenShown) {
+            return
+        }
+
         if (plrs[1].primaryAttackDebounce == false) {
             plrs[1].primaryAttackDebounce = true;
             plrs[1].primaryAttack = true;
@@ -582,8 +622,16 @@ function keyPressed() {
                 ) < hitboxSize;
 
             if (isColliding) {
+                newSound("HurtSFX.wav", 0.75)
+
                 plrs[0].vie = constrain(plrs[0].vie - 5, 0, 100);
-                sleep(100)
+
+                if (plrs[0].vie <= 0 && deathScreenShown == false) {
+                    showDeathScreen(0)
+                }
+                plrs[1].energie = constrain(plrs[1].energie += 10, 0, 100)
+            } else {
+                newSound("SwingSFX.wav", 0.8)
             }
 
             setTimeout(() => {
@@ -591,13 +639,66 @@ function keyPressed() {
             }, 400);
             setTimeout(() => {
                 plrs[1].primaryAttackDebounce = false;
-        }, 500);
+            }, 500);
         }
     }
+
+    // Guérir Joueur 1 (Kasey)
+    if (keyCode == keyCodes.Key_Q) {
+        if (plrs[1].healDebounce == false) {
+            plrs[1].healDebounce = true;
+            plrs[1].vie = constrain(plrs[1].vie + 25, 0, 100)
+
+            idleGif2.elt.style.animation = 'healAnim 0.5s linear'
+            runGif2.elt.style.animation = 'healAnim 0.5s linear'
+            primaryAttackGif2.elt.style.animation = 'healAnim 0.5s linear'
+
+            newSound("HealSFX.wav", 0.6)
+
+            setTimeout(() => {
+                idleGif2.elt.style.animation = 'none'
+                runGif2.elt.style.animation = 'none'
+                primaryAttackGif2.elt.style.animation = 'none'
+            }, 1000);
+
+            setTimeout(() => {
+                plrs[1].healDebounce = false
+            }, healCooldownTime * 1000);
+        }
+    }
+
+    // Guérir Joueur 0 (Kasey)
+    if (keyCode == keyCodes.Key_RCTRL) {
+        if (plrs[0].healDebounce == false) {
+            plrs[0].healDebounce = true;
+            plrs[0].vie = constrain(plrs[0].vie + 25, 0, 100)
+
+            idleGif.elt.style.animation = 'healAnim 0.5s linear'
+            runGif.elt.style.animation = 'healAnim 0.5s linear'
+            primaryAttackGif.elt.style.animation = 'healAnim 0.5s linear'
+
+            newSound("HealSFX.wav", 0.6)
+
+            setTimeout(() => {
+                idleGif.elt.style.animation = 'none'
+                runGif.elt.style.animation = 'none'
+                primaryAttackGif.elt.style.animation = 'none'
+            }, 1000);
+
+            setTimeout(() => {
+                plrs[0].healDebounce = false
+            }, healCooldownTime * 1000);
+        }
+    }
+
 }
 
-// Attaque Joueur 0
+// Attaque Joueur 0 (Kasey)
 function mouseClicked() {
+    if (deathScreenShown) {
+        return
+    }
+
     if (plrs[0].primaryAttackDebounce == false) {
         plrs[0].primaryAttackDebounce = true;
         plrs[0].primaryAttack = true;
@@ -614,8 +715,17 @@ function mouseClicked() {
             ) < hitboxSize;
 
         if (isColliding) {
+            newSound("HurtSFX.wav", 0.75)
+
             plrs[1].vie = constrain(plrs[1].vie - 5, 0, 100);
-            sleep(100)
+
+            if (plrs[1].vie <= 0 && deathScreenShown == false) {
+                showDeathScreen(1)
+            }
+
+            plrs[0].energie = constrain(plrs[0].energie += 10, 0, 100)
+        } else {
+            newSound("SwingSFX.wav", 0.8)
         }
 
         setTimeout(() => {
@@ -627,17 +737,20 @@ function mouseClicked() {
     }
 }
 
+
+
+// Visuels des joysticks (Maxime)
 function updateJoystickVisuals() {
     let joy1 = document.getElementById("joy1");
     let joy2 = document.getElementById("joy2");
 
-    // RESET
+    // Réinitialiser
     joy1.classList.remove("joy-left");
     joy1.classList.remove("joy-right");
     joy2.classList.remove("joy-left");
     joy2.classList.remove("joy-right");
 
-    // JOUEUR 1
+    // Joueur 1
     if (keyIsDown(keyCodes.Key_A)) {
         joy1.classList.add("joy-left");
     }
@@ -646,7 +759,7 @@ function updateJoystickVisuals() {
         joy1.classList.add("joy-right");
     }
 
-    // JOUEUR 2
+    // Joueur 2
     if (keyIsDown(keyCodes.Key_LArrow)) {
         joy2.classList.add("joy-left");
     }
@@ -656,12 +769,42 @@ function updateJoystickVisuals() {
     }
 }
 
-// source de cette fonction: https://stackoverflow.com/questions/16873323/javascript-sleep-wait-before-continuing
-function sleep(milliseconds) {
-    var start = new Date().getTime();
-    for (var i = 0; i < 1e7; i++) {
-        if (new Date().getTime() - start > milliseconds) {
-            break;
-        }
+endScreenReplayButton.addEventListener('mouseover', () => {
+    endScreenReplayButton.innerText = "> REJOUER <"
+});
+
+endScreenReplayButton.addEventListener('mouseout', () => {
+    endScreenReplayButton.innerText = ">REJOUER<"
+});
+
+endScreenReplayButton.addEventListener('click', () => {
+    window.location.reload();
+});
+
+// Fonction qui montre l'écran de mort quand un des joueurs meurt (Kasey)
+function showDeathScreen(plrId) {
+    deathScreenShown = true
+    endScreen.style.display = "flex"
+    endScreenMainTitle.innerText = 'Joueur #' + (plrId + 1) + ' a gagné!'
+    endScreen.style.animation = "fadeIn 1s forwards"
+
+    newSound("DeathSFX.mp3", 0.5)
+
+    if (plrId == 0) {
+        idleGif.class('hidden noSelect')
+        runGif.class('hidden noSelect')
+        primaryAttackGif.class('hidden noSelect')
+    } else if (plrId == 1) {
+        idleGif2.class('hidden noSelect')
+        runGif2.class('hidden noSelect')
+        primaryAttackGif2.class('hidden noSelect')
     }
+}
+
+// fonction qui facilite l'ajout de sons (Kasey)
+function newSound(nom, vol) {
+    let son = new Audio("RESOURCES/SOUNDS/"+nom);
+    son.volume = vol? vol : 1;
+    son.play();
+    return son
 }

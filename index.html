@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,7 +19,7 @@
         <!-- Haut arcade (Maxime)-->
         <div class="arcade-top">
 
-            <div class="arcade-title">
+            <div class="arcade-title noSelect">
                 COMBAT DE RUE
             </div>
 
@@ -26,67 +27,98 @@
 
         <!-- Écran (Maxime)-->
         <div class="screen-container">
-
             <div id="mainContainer" class="noSelect"></div>
+            <div id="endScreen" class="noSelect">
+                <div id="endScreenMainTitle">Joueur # a gagné</div>
+                <div id="endScreenReplayButton"><span>>REJOUER<</span></div>
+            </div>
+        </div>
+        <!-- Panel arcade -->
+        <div class="controls-panel">
+
+            <!-- Côté joueur 1 -->
+            <div class="player-controls">
+                <div class="joystick" id="joy1">
+                    <div class="stick"></div>
+                    <div class="ball red"></div>
+                </div>
+
+                <div class="buttons">
+                    <div class="btn red-btn"></div>
+                    <div class="btn red-btn"></div>
+                    <div class="btn red-btn"></div>
+                    <div class="btn red-btn"></div>
+                </div>
+            </div>
+
+            <!-- Centre -->
+            <div class="coin-section">
+
+                <p>INSERT COIN</p>
+                <div class="coin-lights">
+                    <div class="coin-light"></div>
+                    <div class="coin-light"></div>
+                </div>
+
+            </div>
+
+            <!-- Côté joueur 2 -->
+            <div class="player-controls">
+
+                <div class="buttons">
+                    <div class="btn blue-btn"></div>
+                    <div class="btn blue-btn"></div>
+                    <div class="btn blue-btn"></div>
+                    <div class="btn blue-btn"></div>
+                </div>
+
+                <div class="joystick" id="joy2">
+                    <div class="stick"></div>
+                    <div class="ball blue"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel tutoriel -->
+
+        <div id="tutorialPanel">
+
+            <div class="tutoSubPanel leftSubTutoPanel noSelect">
+                Controles Joueur 1:<br>
+                W - Saut<br>
+                A - Bouger à gauche<br>
+                S - Bouger à droite<br>
+                D - Accroupir & descendre plus vite<br>
+                A 2x - Dash vers la gauche<br>
+                D 2x - Dash vers la droite<br>
+                Q - Auto-guérison (Temps de recharge de 10 secondes)<br>
+            </div>
+
+            <div class="tutoSubPanel rightSubTutoPanel noSelect">
+                Controles Joueur 2:<br>
+                ↑ - Saut<br>
+                ← - Bouger à gauche<br>
+                ↓ - Bouger à droite<br>
+                → - Accroupir & descendre plus vite<br>
+                ← 2x - Dash vers la gauche<br>
+                → 2x - Dash vers la droite<br>
+                CTRL Droit - Auto-guérison (Temps de recharge de 10 secondes)<br>
+            </div>
 
         </div>
 
-<!-- Panel arcade -->
-<div class="controls-panel">
-
-    <!-- Côté joueur 1 -->
-    <div class="player-controls">
-
-        <div class="joystick" id="joy1">
-            <div class="stick"></div>
-            <div class="ball red"></div>
-
+        <!--Panel crédits-->
+        <div id="credits" class="noSelect">
+            <p><u>Fait par:</u></p>
+            <p>Maxime Durocher</p>
+            <p>&</p>
+            <p>Kasey Tremblay</p>
         </div>
 
-        <div class="buttons">
-            <div class="btn red-btn"></div>
-            <div class="btn red-btn"></div>
-            <div class="btn red-btn"></div>
-            <div class="btn red-btn"></div>
+        <audio autoplay loop id="bgMusic">
+            <source src="RESOURCES/SOUNDS/BGMusic.mp3" type="audio/mp3">
+        </audio>
 
-        </div>
-
-    </div>
-
-    <!-- Centre -->
-    <div class="coin-section">
-
-        <p>INSERT COIN</p>
-        <div class="coin-lights">
-            <div class="coin-light"></div>
-            <div class="coin-light"></div>
-
-        </div>
-
-    </div>
-
-    <!-- Côté joueur 2 -->
-    <div class="player-controls">
-
-        <div class="buttons">
-            <div class="btn blue-btn"></div>
-            <div class="btn blue-btn"></div>
-            <div class="btn blue-btn"></div>
-            <div class="btn blue-btn"></div>
-
-        </div>
-
-        <div class="joystick" id="joy2">
-            <div class="stick"></div>
-            <div class="ball blue"></div>
-
-        </div>
-
-    </div>
-
-</div>
-
-    <script src="JS/keys.js"></script>
-    <script src="JS/script.js"></script>
-
+        <script src="JS/keys.js"></script>
+        <script src="JS/script.js"></script>
 </body>

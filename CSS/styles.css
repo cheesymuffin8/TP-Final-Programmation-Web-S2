@@ -25,7 +25,6 @@ body{
 }
 
 .noSelect {
-    pointer-events: none;
     -moz-user-select: none;
     -webkit-user-select: none;
     user-select: none;
@@ -116,6 +115,52 @@ canvas{
     justify-content:center;
     align-items:center;
     position:relative;
+}
+
+@keyframes fadeIn {
+    100% {
+        opacity: 1;
+    }
+}
+
+#endScreen{
+    display: none;
+    position: absolute;
+    border:10px solid #000;
+    border-radius:10px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    width:800px;
+    height:600px;
+    justify-content:center;
+    align-items:center;
+    opacity: 0;
+}
+
+#endScreenMainTitle{
+    display: flex;
+    position: absolute;
+    top: 225px;
+
+    font-size: 24px;
+    color: rgb(255, 0, 200);
+}
+
+#endScreenReplayButton{
+    background-color: rgb(76, 27, 155);
+    display: flex;
+    position: absolute;
+    bottom: 225px;
+    padding: 20px;
+    border-radius: 15px;
+
+    font-size: 24px;
+    color: rgb(137, 74, 236);
+
+    &:hover{
+        color: rgb(154, 91, 255);
+        cursor: pointer;
+    }
 }
 
 /* Panel */
@@ -270,6 +315,67 @@ canvas{
     0 0 10px orange;
 }
 
+@keyframes healAnim {
+    0% {
+        filter: drop-shadow(#74ff24 0px 0px 6px);
+    }
+    100% {
+        filter: drop-shadow(#ff009d 0px 0px 4px);
+    }
+}
+
 .charGif{
     filter: drop-shadow(#ff009d 0px 0px 4px);
+}
+
+.tutoSubPanel{
+    display: flex;
+    position: absolute;
+    width: 425px;
+
+    font-family:monospace;
+    font-size: 18px;
+    color: rgb(163, 64, 255);
+    backdrop-filter: blur(10px);
+    
+    flex-direction: column;
+
+    background-color: rgba(37, 0, 71, 0.5);
+    padding: 10px;
+
+    border-radius: 10px;
+}
+
+.leftSubTutoPanel{
+    bottom: 15px;
+    left: 15px;
+}
+
+.rightSubTutoPanel{
+    bottom: 15px;
+    right: 15px;
+}
+
+#credits{
+    display: flex;
+    position: absolute;
+    backdrop-filter: blur(10px);
+    
+    text-align: center;
+    line-height: 1.5;
+    font-family:monospace;
+    font-size: 18px;
+    font-weight: 900;
+    color: rgb(163, 64, 255);
+    flex-direction: column;
+    background-color: rgba(37, 0, 71, 0.5);
+    padding: 10px;
+    top: 15px;
+    left: 15px;
+    border-radius: 10px;
+}
+
+.hidden {
+    display: none !important;
+    opacity: 0 !important;
 }
