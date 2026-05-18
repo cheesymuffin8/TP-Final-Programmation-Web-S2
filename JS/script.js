@@ -147,8 +147,7 @@ function setup() {
 
 function draw() {
 
-
-
+ 
     background(backgroundImg);
     drawFloor();
 
